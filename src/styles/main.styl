@@ -1,0 +1,146 @@
+
+@import 'nib'
+@import 'reset.css'
+@import 'prism.css'
+@import 'icon-fonts.css'
+
+//Variables
+greyContent = #272822
+greyTab = #41413F
+greySelected = #A2A2A2
+greySidebar = #E6E6E6
+greyHeader = #4B4943
+greyBackground = #171814
+greyBorder = #7E7F7B
+
+body
+	font-size 16px
+	font-family "Space Mono"
+	
+pre
+	margin 0 !important
+	height 100%
+	
+.container
+	width 100vw
+	height 100vh
+.header
+	background greyHeader
+	position fixed
+	width 100%
+	top 0
+	&-nav
+		&--list
+			display inline-flex
+		&--item
+			color greySidebar
+			margin-left .6em
+			padding .2em 0
+		&--item__active
+			border 1px solid greyContent
+			border-radius 5px 5px 0 0
+
+.body
+	background greyBackground
+	width 100%
+	height 100%
+	&-sidebar
+		position fixed
+		background-color greySidebar
+		padding .5em 3em .5em .5em
+		width 7em
+		height 100%
+		top 1.6em
+		font-size .9em
+		&--openFiles,
+		&--folders
+			width 100%
+			padding .3em .3em
+		&--openFiles h4,
+		&--folders h4
+			padding .1em 0
+	&-content
+		position fixed
+		left 9.5em
+		top 1.6em
+		width 100%
+		height 100%
+		&--nav
+			position fixed
+			left 9.5em
+			top 1.25em
+			&__list
+				margin-top .5em
+				display inline-flex
+			&__tab
+				background-color greyTab
+				color greyBorder
+			&__tab span,
+			&__tabActive span
+				margin-left .9em
+				font-size .5em
+			&__tabActive
+				background-color greyContent
+				
+		&--code
+			width 100%
+			height 100%
+			position relative
+			top 1.8em
+			z-index 0
+
+.folder-open
+	display none
+	background-color greySidebar
+	&--file
+		margin-left .5em
+	&--list
+		padding .1em 0
+			
+.sidebar-folders--archive
+	padding .1em 0
+	margin-left .2em
+	
+.sidebar-folders--folder
+	margin-left .2em
+
+.sidebar-openFiles--file
+	margin-left .5em
+
+.sidebar-folders--folder,
+.sidebar-openFiles--file
+	padding .1em 0
+
+
+.sidebar-folders--folder span,
+.sidebar-openFiles--file span,
+.folder-open--file span,
+.sidebar-folders--archive span
+	margin-right .5em
+	
+
+.sidebar-folders--folder span,
+.folder-open--file span,
+.sidebar-folders--archive span
+	font-size .9em
+	
+.sidebar-openFiles--file span
+	font-size .5em
+
+.body-content--nav__tab,
+.body-content--nav__tabActive
+	color greySidebar
+	padding .6em
+	font-size .8em
+	border-radius 15px 15px 0 0
+	border-width 1px
+	
+.footer
+	bottom 0
+	position fixed
+	background greyHeader
+	width 100%
+	&-info
+		padding 0.2em .6em 
+		color greySidebar
+	

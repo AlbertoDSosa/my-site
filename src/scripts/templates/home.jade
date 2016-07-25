@@ -1,0 +1,53 @@
+
+header.header
+	nav.header-nav
+		ul.header-nav--list
+			li.header-nav--item File
+			li.header-nav--item Edit
+			li.header-nav--item Selection
+			li.header-nav--item Find
+			li.header-nav--item View
+			li.header-nav--item GoTo
+			li.header-nav--item Tools
+			li.header-nav--item Project
+			li.header-nav--item Preferences
+			li.header-nav--item Help
+section.body
+	aside.body-sidebar
+		.body-sidebar--openFiles
+			h4 OPEN FILES
+			ul.sidebar-openFiles--list
+				include ./open-files.jade
+		.body-sidebar--folders
+			h4 FOLDERS
+			ul.sidebar-folders--list
+				li.sidebar-folders--folder
+					span.icon.icon-folder
+					|bin
+				li.sidebar-folders--folder
+					span.icon.icon-folder
+					| build
+					.folder-open
+						ul.folder-open--list
+							li.folder-open--file
+								span.icon.icon-file-text2
+								| index.html
+				li.sidebar-folders--folder
+					span.icon.icon-folder
+					| src
+				li.sidebar-folders--archive
+					span.icon.icon-file-text2
+					| readme.md
+				li.sidebar-folders--archive
+					span.icon.icon-file-text2
+					| package.json
+
+	article.body-content
+		nav.body-content--nav
+			ul.body-content--nav__list
+				include ./tabs.jade
+		.body-content--code
+			pre.line-numbers
+				code
+footer.footer
+	.footer-info Alberto D.Sosa - 2016

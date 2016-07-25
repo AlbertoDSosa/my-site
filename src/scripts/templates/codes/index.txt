@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+	<meta description="">
+	<title>Alberto D.Sosa</title>
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<div class="container">
+		<header class="header">
+			
+		</header>
+		<section class="body">
+			
+		</section>
+		<footer class="footer">
+			<div class="footer-info">Alberto D.Sosa - 2016</div>
+		</footer>
+	</div>
+	<script src="js/main.js"></script>
+</body>
+</html>
