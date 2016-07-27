@@ -1005,6 +1005,9 @@ pre {
   margin: 0 !important;
   height: 100%;
 }
+::selection {
+  background: transparent;
+}
 .container {
   width: 100vw;
   height: 100vh;
@@ -1106,7 +1109,7 @@ pre {
 .folder-open--list {
   padding: 0.1em 0;
 }
-.sidebar-folders--archive {
+.sidebar-folders--file {
   padding: 0.1em 0;
   margin-left: 0.2em;
 }
@@ -1123,12 +1126,12 @@ pre {
 .sidebar-folders--folder span,
 .sidebar-openFiles--file span,
 .folder-open--file span,
-.sidebar-folders--archive span {
+.sidebar-folders--file span {
   margin-right: 0.5em;
 }
 .sidebar-folders--folder span,
 .folder-open--file span,
-.sidebar-folders--archive span {
+.sidebar-folders--file span {
   font-size: 0.9em;
 }
 .sidebar-openFiles--file span {

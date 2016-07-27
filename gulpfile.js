@@ -3,7 +3,6 @@ var gulp = require('gulp'),
 	stylus = require('gulp-stylus'),
 	nib = require('nib'),
 	jadeify = require('jadeify'),
-	copy = require('gulp-copy'),
 	browserify =  require('browserify'),
 	buffer = require('vinyl-buffer'),
 	jade = require('gulp-jade'),
@@ -29,9 +28,9 @@ var config = {
 		output: './build/js'
 	},
 
-	vendor: {
-		main: './src/scripts/vendor/**/*.js',
-		output: './build/js/vendor'
+	copy: {
+		main: './src/assets/icon-fonts/*',
+		output: './build/css/icon-fonts'
 	}
 }
 
@@ -46,8 +45,8 @@ gulp.task('server', function () {
 });
 
 gulp.task('build:copy', function () {
-	gulp.src(config.vendor.main)
-  .pipe(gulp.dest(config.vendor.output));
+	gulp.src(config.copy.main)
+  .pipe(gulp.dest(config.copy.output));
 });
 
 gulp.task('build:scripts', function() {
@@ -82,5 +81,5 @@ gulp.task('watch', function () {
 	gulp.watch(config.scripts.watch, ['build:scripts']);
 });
 
-gulp.task('build', ['build:css', 'build:jade', 'build:scripts', 'build:copy']);
+gulp.task('build', [ 'build:jade', 'build:scripts', 'build:css', 'build:copy']);
 gulp.task('default', ['server', 'build', 'watch']);

@@ -9,36 +9,51 @@ function DomElements (event) {
 	this.iconCross = $('span.icon-cross');
 	this.iconFolder = $('span.icon-folder');
 	this.iconFile = $('span.icon-file-text2');
+	this.iconFileClass = 'span.icon-file-text2'
 	
 	// files
 
-	this.$openFiles = $('.sidebar-openFiles--file');
+	this.openFiles = $('.sidebar-openFiles--file');
+	this.openFilesArray = this.openFiles.toArray();
 	this.openFilesList = $('.sidebar-openFiles--list');
-	this.file = this.element.parent().text();
-	this.openFiles = this.$openFiles.toArray();
-	this.fileName = this.file.split('.')[0];
-	this.fileExt = this.file.split('.')[1];
+	this.files = $('li.folder-open--file');
+	this.$files = $('li.sidebar-folders--file');
+	this.file = this.element.text();
+	this.$file = this.element.parent().text();
 
 	// Tabs
+
 	this.tabList = $('.body-content--nav__list');
-	this.$tab = $('li.body-content--nav__tab');
-	this.tab = $('.tab');
-	
+	this.tab = $('.tab');	
 
 	// Filters
 
 	this.$reclosables = this.iconCross.parent();
-	this.reclosables = $.makeArray(this.$reclosables);
+	this.reclosables = this.$reclosables.toArray();
 }
 
 DomElements.prototype.getLanguage = function(fileExt) {
-	fileExt = fileExt || this.fileExt;
 	if(fileExt === 'md') {
 		return 'markdown';
 	} else if(fileExt === 'html') {
 		return 'markup'
 	} else {
 		return fileExt;
+	}
+};
+
+DomElements.prototype.getFileAtr = function(file) {
+	return {
+		fileName: file.split('.')[0],
+		fileExt: file.split('.')[1]
+	}
+};
+
+DomElements.prototype.getFile = function(element) {
+	if(element.hasClass('folder-open--file') || element.hasClass('sidebar-folders--file')){
+		return this.file;
+	} else {
+		return this.$file;
 	}
 };
 

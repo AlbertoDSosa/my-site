@@ -12235,36 +12235,51 @@ function DomElements (event) {
 	this.iconCross = $('span.icon-cross');
 	this.iconFolder = $('span.icon-folder');
 	this.iconFile = $('span.icon-file-text2');
+	this.iconFileClass = 'span.icon-file-text2'
 	
 	// files
 
-	this.$openFiles = $('.sidebar-openFiles--file');
+	this.openFiles = $('.sidebar-openFiles--file');
+	this.openFilesArray = this.openFiles.toArray();
 	this.openFilesList = $('.sidebar-openFiles--list');
-	this.file = this.element.parent().text();
-	this.openFiles = this.$openFiles.toArray();
-	this.fileName = this.file.split('.')[0];
-	this.fileExt = this.file.split('.')[1];
+	this.files = $('li.folder-open--file');
+	this.$files = $('li.sidebar-folders--file');
+	this.file = this.element.text();
+	this.$file = this.element.parent().text();
 
 	// Tabs
+
 	this.tabList = $('.body-content--nav__list');
-	this.$tab = $('li.body-content--nav__tab');
-	this.tab = $('.tab');
-	
+	this.tab = $('.tab');	
 
 	// Filters
 
 	this.$reclosables = this.iconCross.parent();
-	this.reclosables = $.makeArray(this.$reclosables);
+	this.reclosables = this.$reclosables.toArray();
 }
 
 DomElements.prototype.getLanguage = function(fileExt) {
-	fileExt = fileExt || this.fileExt;
 	if(fileExt === 'md') {
 		return 'markdown';
 	} else if(fileExt === 'html') {
 		return 'markup'
 	} else {
 		return fileExt;
+	}
+};
+
+DomElements.prototype.getFileAtr = function(file) {
+	return {
+		fileName: file.split('.')[0],
+		fileExt: file.split('.')[1]
+	}
+};
+
+DomElements.prototype.getFile = function(element) {
+	if(element.hasClass('folder-open--file') || element.hasClass('sidebar-folders--file')){
+		return this.file;
+	} else {
+		return this.$file;
 	}
 };
 
@@ -12285,96 +12300,125 @@ var features = new Features();
 var active = 'body-content--nav__tabActive';
 var normal = 'body-content--nav__tab';
 
-Features.prototype.addCode = function(codeText, language) {
-
-	var html = Prism.highlight(codeText, Prism.languages[language]);
-
-	$('code')
-		.html(html);
-};
-
-Features.prototype.activeTab = function(event) {
-	event.preventDefault();
-	event.stopPropagation();
-
-	var dom = new DomElements(event);
-
-	// Activar y desactivar pestañas cuando hacemos click en ellas
-	dom.element
-		.removeClass(normal)
-		.addClass(active)
-		.siblings()
-		.removeClass(active)
-		.addClass(normal);
-
-	// Añadir el código correspondiente al cuerpo
-	var file = dom.element.text();
-	var fileName = file.split('.')[0];
-	var fileExt = file.split('.')[1];
-	var code = codes[fileName];
-	var language = dom.getLanguage(fileExt);
-
-	features.addCode(code, language);
-
-};
-
 Features.prototype.getNewDom = function(event) {
 	event = event || {};
 	return new DomElements(event);
 };
 
-Features.prototype.listenTabs = function() {
-	var newDom = features.getNewDom();
-	newDom.tab.on('click', features.activeTab);
+Features.prototype.addCode = function(file) {
+	var dom = this.getNewDom()
+	var fileAtr = dom.getFileAtr(file);
+	var codeText = codes[fileAtr.fileName];
+	var language = dom.getLanguage(fileAtr.fileExt);
+
+	var html = Prism.highlight(codeText, Prism.languages[language]);
+
+	$('code')
+		.removeClass()
+		.addClass('language-'+ language)
+		.html(html);
 };
 
-Features.prototype.listenReclosableElements = function () {
-	var newDom = new DomElements(event);
-
+Features.prototype.activeTab = function() {
 	// Activar y desactivar las pestañas cuando abrimos un archivo
 	$('.tab')
 		.last()
 		.siblings()
 		.removeClass(active)
 		.addClass(normal);
+};
 
+Features.prototype.changeTab = function(event, file) {
+	event.preventDefault();
+	event.stopPropagation();
+
+	var dom = new DomElements(event);
+
+	file = file || dom.file;
+
+	dom.tab.each(function (index, element) {
+  		if($(element).text() === file){
+  			$(element)
+  				.removeClass(normal)
+					.addClass(active)
+					.siblings()
+					.removeClass(active)
+					.addClass(normal);
+  		}
+  });
+
+	// Añadir el código correspondiente al cuerpo
+
+	features.addCode(file);
+
+};
+
+Features.prototype.listenFiles = function() {
+	var newDom = features.getNewDom(event);
+	newDom.files.on('click', newDom.iconFilesClass ,features.filesPreview);
+	newDom.$files.on('click', newDom.iconFilesClass ,features.filesPreview);
+};
+
+Features.prototype.listenTabs = function() {
+	var newDom = features.getNewDom();
+	newDom.tab.on('click', features.changeTab);
+};
+
+Features.prototype.filesPreview = function(event) {
+	event.preventDefault();
+	event.stopPropagation();
+
+	var dom = features.getNewDom(event);
+	var file = dom.getFile(dom.element);
+
+  if(dom.tab.length > 1){
+  	features.changeTab(event, file);
+  }
+
+	features.addCode(file);
+};
+
+Features.prototype.listenReclosableElements = function () {
+	var newDom = new DomElements();
 	newDom.iconCross.on('click', features.closeFile);
 }
 
 Features.prototype.openFile = function(event) {
 	event.preventDefault();
 	event.stopPropagation();
+
 	// Elementos del dom cuando se activa esta función
 	var dom = new DomElements(event);
 
+	var	file = dom.getFile(dom.element);
+
 	// Iteración sobre los archivos abiertos
-	var opened = dom.openFiles.some(function (element) {
-		return $(element).text() === dom.file;
+	var opened = dom.openFilesArray.some(function (element) {
+		return $(element).text() === file;
 	});
 
 	// Algoritmo para cuando se abren archivos
 	if(!opened){
-		
-		var codeText = codes[dom.fileName];
-		var language = dom.getLanguage();
 
 		// Sidebar Open Files
 
 		dom.openFilesList
-			.append(openFilesTemplate({file: dom.file}))
+			.append(openFilesTemplate({file: file}))
 			.promise()
-			.done(features.listenReclosableElements);
+			.done(features.listenReclosableElements)
+			.done(features.listenFiles);
 
 		// Code
 
-		features.addCode(codeText, language);
+		features.addCode(file);
 		
 		// Tabs
 
 		dom.tabList
-			.append(tabsTemplate({file: dom.file}))
+			.append(tabsTemplate({file: file}))
 			.promise()
-			.then(features.listenReclosableElements)
+			.done(features.activeTab)
+			.done(features.listenReclosableElements)
 			.done(features.listenTabs);
 	}
 };
@@ -12386,7 +12430,7 @@ Features.prototype.closeFile = function(event) {
 
 	// Filtro de elementos que van a cerrarse
 	var filter = dom.reclosables.filter(function (element) {
-		return $(element).text() === dom.file;
+		return $(element).text() === dom.$file;
 	});
 
 	// Eliminación de esos elementos
@@ -12397,7 +12441,7 @@ Features.prototype.closeFile = function(event) {
 	/* Algoritmo que resuelve el estado de las pestañas
 	 al cerrar un archivo */
 	dom.tab.each(function (index, element) {
-		if($(element).text() === dom.file){
+		if($(element).text() === dom.$file){
 			var prev = dom.tab.get(index - 1);
 
 			if(dom.tab.length === 1){
@@ -12409,18 +12453,12 @@ Features.prototype.closeFile = function(event) {
 
 				// Añadir el código correspondiente al cuerpo
 				var file = $(prev).text();
-				var fileName = file.split('.')[0];
-				var fileExt = file.split('.')[1];
-				var code = codes[fileName];
-				var language = dom.getLanguage(fileExt);
 
-				features.addCode(code, language); 
+				features.addCode(file); 
 
 			}
 		}
-	})
-
-
+	});
 
 };
 
@@ -12458,11 +12496,17 @@ $(document).ready(function () {
 
 	dom.iconFolder.on('click', features.activeFolders);
 
-	dom.iconFile.on('dblclick', features.openFile);
+	dom.$files.on('dblclick', dom.iconFilesClass, features.openFile);
+
+	dom.files.on('dblclick', dom.iconFilesClass, features.openFile);
 
 	dom.iconCross.on('click', features.closeFile);
 
+	dom.files.on('click', dom.iconFilesClass, features.filesPreview);
 
+	dom.$files.on('click',dom.iconFilesClass, features.filesPreview);
+
+	dom.tab.on('click',features.changeTab);
 });
 
 page();
@@ -12631,7 +12675,7 @@ var buf = [];
 var jade_mixins = {};
 var jade_interp;
 ;var locals_for_with = (locals || {});(function (file) {
-buf.push("<header class=\"header\"><nav class=\"header-nav\"><ul class=\"header-nav--list\"><li class=\"header-nav--item\">File</li><li class=\"header-nav--item\">Edit</li><li class=\"header-nav--item\">Selection</li><li class=\"header-nav--item\">Find</li><li class=\"header-nav--item\">View</li><li class=\"header-nav--item\">GoTo</li><li class=\"header-nav--item\">Tools</li><li class=\"header-nav--item\">Project</li><li class=\"header-nav--item\">Preferences</li><li class=\"header-nav--item\">Help</li></ul></nav></header><section class=\"body\"><aside class=\"body-sidebar\"><div class=\"body-sidebar--openFiles\"><h4>OPEN FILES</h4><ul class=\"sidebar-openFiles--list\"><li class=\"sidebar-openFiles--file\"><span class=\"icon icon-cross\"></span>" + (jade.escape((jade_interp = file) == null ? '' : jade_interp)) + "</li></ul></div><div class=\"body-sidebar--folders\"><h4>FOLDERS</h4><ul class=\"sidebar-folders--list\"><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>bin</li><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>build<div class=\"folder-open\"><ul class=\"folder-open--list\"><li class=\"folder-open--file\"><span class=\"icon icon-file-text2\"></span>index.html</li></ul></div></li><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>src</li><li class=\"sidebar-folders--archive\"><span class=\"icon icon-file-text2\"></span>readme.md</li><li class=\"sidebar-folders--archive\"><span class=\"icon icon-file-text2\"></span>package.json</li></ul></div></aside><article class=\"body-content\"><nav class=\"body-content--nav\"><ul class=\"body-content--nav__list\"><li class=\"tab body-content--nav__tabActive\">" + (jade.escape((jade_interp = file) == null ? '' : jade_interp)) + "<span class=\"icon icon-cross\"></span></li></ul></nav><div class=\"body-content--code\"><pre class=\"line-numbers\"><code></code></pre></div></article></section><footer class=\"footer\"><div class=\"footer-info\">Alberto D.Sosa - 2016</div></footer>");}.call(this,"file" in locals_for_with?locals_for_with.file:typeof file!=="undefined"?file:undefined));;return buf.join("");
+buf.push("<header class=\"header\"><nav class=\"header-nav\"><ul class=\"header-nav--list\"><li class=\"header-nav--item\">File</li><li class=\"header-nav--item\">Edit</li><li class=\"header-nav--item\">Selection</li><li class=\"header-nav--item\">Find</li><li class=\"header-nav--item\">View</li><li class=\"header-nav--item\">GoTo</li><li class=\"header-nav--item\">Tools</li><li class=\"header-nav--item\">Project</li><li class=\"header-nav--item\">Preferences</li><li class=\"header-nav--item\">Help</li></ul></nav></header><section class=\"body\"><aside class=\"body-sidebar\"><div class=\"body-sidebar--openFiles\"><h4>OPEN FILES</h4><ul class=\"sidebar-openFiles--list\"><li class=\"sidebar-openFiles--file\"><span class=\"icon icon-cross\"></span>" + (jade.escape((jade_interp = file) == null ? '' : jade_interp)) + "</li></ul></div><div class=\"body-sidebar--folders\"><h4>FOLDERS</h4><ul class=\"sidebar-folders--list\"><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>bin</li><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>build<div class=\"folder-open\"><ul class=\"folder-open--list\"><li class=\"folder-open--file\"><span class=\"icon icon-file-text2\"></span>index.html</li></ul></div></li><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>src</li><li class=\"sidebar-folders--file\"><span class=\"icon icon-file-text2\"></span>readme.md</li><li class=\"sidebar-folders--file\"><span class=\"icon icon-file-text2\"></span>package.json</li></ul></div></aside><article class=\"body-content\"><nav class=\"body-content--nav\"><ul class=\"body-content--nav__list\"><li class=\"tab body-content--nav__tabActive\">" + (jade.escape((jade_interp = file) == null ? '' : jade_interp)) + "<span class=\"icon icon-cross\"></span></li></ul></nav><div class=\"body-content--code\"><pre class=\"line-numbers\"><code></code></pre></div></article></section><footer class=\"footer\"><div class=\"footer-info\">Alberto D.Sosa - 2016</div></footer>");}.call(this,"file" in locals_for_with?locals_for_with.file:typeof file!=="undefined"?file:undefined));;return buf.join("");
 };
 },{"jade/runtime":4}],18:[function(require,module,exports){
 var $ = require('jquery');

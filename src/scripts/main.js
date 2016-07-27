@@ -15,11 +15,17 @@ $(document).ready(function () {
 
 	dom.iconFolder.on('click', features.activeFolders);
 
-	dom.iconFile.on('dblclick', features.openFile);
+	dom.$files.on('dblclick', dom.iconFilesClass, features.openFile);
+
+	dom.files.on('dblclick', dom.iconFilesClass, features.openFile);
 
 	dom.iconCross.on('click', features.closeFile);
 
+	dom.files.on('click', dom.iconFilesClass, features.filesPreview);
 
+	dom.$files.on('click',dom.iconFilesClass, features.filesPreview);
+
+	dom.tab.on('click',features.changeTab);
 });
 
 page();
