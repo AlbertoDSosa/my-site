@@ -26,6 +26,7 @@ $(document).ready(function () {
 	dom.$files.on('click',dom.iconFilesClass, features.filesPreview);
 
 	dom.tab.on('click',features.changeTab);
+	dom.openFiles.on('click', features.changeTab);
 });
 
 page();

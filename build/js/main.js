@@ -12305,6 +12305,7 @@ Features.prototype.getNewDom = function(event) {
 	return new DomElements(event);
 };
 
+// Acciones cuando ocurre un evento
 Features.prototype.addCode = function(file) {
 	var dom = this.getNewDom()
 	var fileAtr = dom.getFileAtr(file);
@@ -12319,8 +12320,8 @@ Features.prototype.addCode = function(file) {
 		.html(html);
 };
 
+// Activar y desactivar las pestañas cuando abrimos un archivo
 Features.prototype.activeTab = function() {
-	// Activar y desactivar las pestañas cuando abrimos un archivo
 	$('.tab')
 		.last()
 		.siblings()
@@ -12328,6 +12329,7 @@ Features.prototype.activeTab = function() {
 		.addClass(normal);
 };
 
+// Cambia de pestaña activa y de código cuando selecionas otro archivo
 Features.prototype.changeTab = function(event, file) {
 	event.preventDefault();
 	event.stopPropagation();
@@ -12353,17 +12355,6 @@ Features.prototype.changeTab = function(event, file) {
 
 };
 
-Features.prototype.listenFiles = function() {
-	var newDom = features.getNewDom(event);
-	newDom.files.on('click', newDom.iconFilesClass ,features.filesPreview);
-	newDom.$files.on('click', newDom.iconFilesClass ,features.filesPreview);
-};
-
-Features.prototype.listenTabs = function() {
-	var newDom = features.getNewDom();
-	newDom.tab.on('click', features.changeTab);
-};
-
 Features.prototype.filesPreview = function(event) {
 	event.preventDefault();
 	event.stopPropagation();
@@ -12377,6 +12368,24 @@ Features.prototype.filesPreview = function(event) {
 
 	features.addCode(file);
 };
+
+// Escuchar los eventos de los nuevos elementos del Dom
+Features.prototype.listenOpenFiles = function() {
+	var newDom = features.getNewDom();
+	newDom.openFiles.on('click', features.changeTab);
+};
+
+Features.prototype.listenFiles = function() {
+	var newDom = features.getNewDom();
+	newDom.files.on('click', newDom.iconFilesClass ,features.filesPreview);
+	newDom.$files.on('click', newDom.iconFilesClass ,features.filesPreview);
+};
+
+Features.prototype.listenTabs = function() {
+	var newDom = features.getNewDom();
+	newDom.tab.on('click', features.changeTab);
+};
+
 
 Features.prototype.listenReclosableElements = function () {
 	var newDom = new DomElements();
@@ -12406,7 +12415,8 @@ Features.prototype.openFile = function(event) {
 			.append(openFilesTemplate({file: file}))
 			.promise()
 			.done(features.listenReclosableElements)
-			.done(features.listenFiles);
+			.done(features.listenFiles)
+			.done(features.listenOpenFiles);
 
 		// Code
 
@@ -12507,6 +12517,7 @@ $(document).ready(function () {
 	dom.$files.on('click',dom.iconFilesClass, features.filesPreview);
 
 	dom.tab.on('click',features.changeTab);
+	dom.openFiles.on('click', features.changeTab);
 });
 
 page();
