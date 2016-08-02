@@ -9,7 +9,7 @@ function DomElements (event) {
 	this.iconCross = $('span.icon-cross');
 	this.iconFolder = $('span.icon-folder');
 	this.iconFile = $('span.icon-file-text2');
-	this.iconFileClass = 'span.icon-file-text2'
+	this.iconFileClass = 'span.icon-file-text2';
 	
 	// files
 
@@ -55,6 +55,11 @@ DomElements.prototype.getFile = function(element) {
 	} else {
 		return this.$file;
 	}
+};
+
+DomElements.prototype.getCode = function(file) {
+	var fileAtr = this.getFileAtr(file);
+	return fileAtr.fileName + fileAtr.fileExt.toUpperCase();	
 };
 
 module.exports = DomElements;

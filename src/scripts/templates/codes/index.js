@@ -1,9 +1,13 @@
-var index = require('./index.txt');
-var readme = require('./readme.txt');
-var packageJson = require('./package.txt');
+var indexHTML = require('./index-html.txt');
+var readmeMD = require('./readme.txt');
+var packageJSON = require('./package.txt');
+var indexJADE = require('./index-jade.txt');
+var gulpfileJS = require('./gulpfile.txt');
 
 module.exports = {
-	index: index,
-	readme: readme,
-	'package': packageJson
+	indexHTML: indexHTML,
+	readmeMD: readmeMD,
+	packageJSON: packageJSON,
+	indexJADE: indexJADE,
+	gulpfileJS: gulpfileJS
 }

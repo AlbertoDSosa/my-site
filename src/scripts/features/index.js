@@ -22,16 +22,23 @@ Features.prototype.getNewDom = function(event) {
 Features.prototype.addCode = function(file) {
 	var dom = this.getNewDom()
 	var fileAtr = dom.getFileAtr(file);
-	var codeText = codes[fileAtr.fileName];
+	var codeText = codes[dom.getCode(file)];
 	var language = dom.getLanguage(fileAtr.fileExt);
-
 	var html = Prism.highlight(codeText, Prism.languages[language]);
-
+	
 	$('code')
 		.removeClass()
 		.addClass('language-'+ language)
 		.html(html);
+
+	var env = {
+		code: html,
+		element: $('code').get()[0]
+	}
+
+	Prism.hooks.run('complete', env);
 };
+
 
 // Activar y desactivar las pestañas cuando abrimos un archivo
 Features.prototype.activeTab = function() {

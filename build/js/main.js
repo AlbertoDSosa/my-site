@@ -12235,7 +12235,7 @@ function DomElements (event) {
 	this.iconCross = $('span.icon-cross');
 	this.iconFolder = $('span.icon-folder');
 	this.iconFile = $('span.icon-file-text2');
-	this.iconFileClass = 'span.icon-file-text2'
+	this.iconFileClass = 'span.icon-file-text2';
 	
 	// files
 
@@ -12283,6 +12283,11 @@ DomElements.prototype.getFile = function(element) {
 	}
 };
 
+DomElements.prototype.getCode = function(file) {
+	var fileAtr = this.getFileAtr(file);
+	return fileAtr.fileName + fileAtr.fileExt.toUpperCase();	
+};
+
 module.exports = DomElements;
 },{"jquery":5}],10:[function(require,module,exports){
 var $ = require('jquery');
@@ -12309,16 +12314,23 @@ Features.prototype.getNewDom = function(event) {
 Features.prototype.addCode = function(file) {
 	var dom = this.getNewDom()
 	var fileAtr = dom.getFileAtr(file);
-	var codeText = codes[fileAtr.fileName];
+	var codeText = codes[dom.getCode(file)];
 	var language = dom.getLanguage(fileAtr.fileExt);
-
 	var html = Prism.highlight(codeText, Prism.languages[language]);
-
+	
 	$('code')
 		.removeClass()
 		.addClass('language-'+ language)
 		.html(html);
+
+	var env = {
+		code: html,
+		element: $('code').get()[0]
+	}
+
+	Prism.hooks.run('complete', env);
 };
+
 
 // Activar y desactivar las pestañas cuando abrimos un archivo
 Features.prototype.activeTab = function() {
@@ -12488,7 +12500,7 @@ Features.prototype.activeFolders = function(event) {
 };
 
 module.exports =  Features;
-},{"../dom":9,"../prism":12,"../templates/codes":13,"../templates/open-files.jade":19,"../templates/tabs.jade":20,"jquery":5}],11:[function(require,module,exports){
+},{"../dom":9,"../prism":12,"../templates/codes":16,"../templates/open-files.jade":21,"../templates/tabs.jade":22,"jquery":5}],11:[function(require,module,exports){
 var $ = require('jquery');
 var page = require('page');
 var Dom = require('./dom');
@@ -12522,7 +12534,7 @@ $(document).ready(function () {
 
 page();
 
-},{"./dom":9,"./features":10,"./templates/home":18,"jquery":5,"page":6}],12:[function(require,module,exports){
+},{"./dom":9,"./features":10,"./templates/home":20,"jquery":5,"page":6}],12:[function(require,module,exports){
 var Prism = require('prismjs');
 
 Prism.languages.markdown = Prism.languages.extend('markup', {});
@@ -12658,27 +12670,396 @@ Prism.languages.json = {
 
 Prism.languages.jsonp = Prism.languages.json;
 
+(function(Prism) {
+	// TODO:
+	// - Add CSS highlighting inside <style> tags
+	// - Add support for multi-line code blocks
+	// - Add support for interpolation #{} and !{}
+	// - Add support for tag interpolation #[]
+	// - Add explicit support for plain text using |
+	// - Add support for markup embedded in plain text
+
+	Prism.languages.jade = {
+
+		// Multiline stuff should appear before the rest
+
+		// This handles both single-line and multi-line comments
+		'comment': {
+			pattern: /(^([\t ]*))\/\/.*((?:\r?\n|\r)\2[\t ]+.+)*/m,
+			lookbehind: true
+		},
+
+		// All the tag-related part is in lookbehind
+		// so that it can be highlighted by the "tag" pattern
+		'multiline-script': {
+			pattern: /(^([\t ]*)script\b.*\.[\t ]*)((?:\r?\n|\r(?!\n))(?:\2[\t ]+.+|\s*?(?=\r?\n|\r)))+/m,
+			lookbehind: true,
+			inside: {
+				rest: Prism.languages.javascript
+			}
+		},
+
+		// See at the end of the file for known filters
+		'filter': {
+			pattern: /(^([\t ]*)):.+((?:\r?\n|\r(?!\n))(?:\2[\t ]+.+|\s*?(?=\r?\n|\r)))+/m,
+			lookbehind: true,
+			inside: {
+				'filter-name': {
+					pattern: /^:[\w-]+/,
+					alias: 'variable'
+				}
+			}
+		},
+
+		'multiline-plain-text': {
+			pattern: /(^([\t ]*)[\w\-#.]+\.[\t ]*)((?:\r?\n|\r(?!\n))(?:\2[\t ]+.+|\s*?(?=\r?\n|\r)))+/m,
+			lookbehind: true
+		},
+		'markup': {
+			pattern: /(^[\t ]*)<.+/m,
+			lookbehind: true,
+			inside: {
+				rest: Prism.languages.markup
+			}
+		},
+		'doctype': {
+			pattern: /((?:^|\n)[\t ]*)doctype(?: .+)?/,
+			lookbehind: true
+		},
+
+		// This handle all conditional and loop keywords
+		'flow-control': {
+			pattern: /(^[\t ]*)(?:if|unless|else|case|when|default|each|while)\b(?: .+)?/m,
+			lookbehind: true,
+			inside: {
+				'each': {
+					pattern: /^each .+? in\b/,
+					inside: {
+						'keyword': /\b(?:each|in)\b/,
+						'punctuation': /,/
+					}
+				},
+				'branch': {
+					pattern: /^(?:if|unless|else|case|when|default|while)\b/,
+					alias: 'keyword'
+				},
+				rest: Prism.languages.javascript
+			}
+		},
+		'keyword': {
+			pattern: /(^[\t ]*)(?:block|extends|include|append|prepend)\b.+/m,
+			lookbehind: true
+		},
+		'mixin': [
+			// Declaration
+			{
+				pattern: /(^[\t ]*)mixin .+/m,
+				lookbehind: true,
+				inside: {
+					'keyword': /^mixin/,
+					'function': /\w+(?=\s*\(|\s*$)/,
+					'punctuation': /[(),.]/
+				}
+			},
+			// Usage
+			{
+				pattern: /(^[\t ]*)\+.+/m,
+				lookbehind: true,
+				inside: {
+					'name': {
+						pattern: /^\+\w+/,
+						alias: 'function'
+					},
+					'rest': Prism.languages.javascript
+				}
+			}
+		],
+		'script': {
+			pattern: /(^[\t ]*script(?:(?:&[^(]+)?\([^)]+\))*[\t ]+).+/m,
+			lookbehind: true,
+			inside: {
+				rest: Prism.languages.javascript
+			}
+		},
+
+		'plain-text': {
+			pattern: /(^[\t ]*(?!-)[\w\-#.]*[\w\-](?:(?:&[^(]+)?\([^)]+\))*\/?[\t ]+).+/m,
+			lookbehind: true
+		},
+		'tag': {
+			pattern: /(^[\t ]*)(?!-)[\w\-#.]*[\w\-](?:(?:&[^(]+)?\([^)]+\))*\/?:?/m,
+			lookbehind: true,
+			inside: {
+				'attributes': [
+					{
+						pattern: /&[^(]+\([^)]+\)/,
+						inside: {
+							rest: Prism.languages.javascript
+						}
+					},
+					{
+						pattern: /\([^)]+\)/,
+						inside: {
+							'attr-value': {
+								pattern: /(=\s*)(?:\{[^}]*\}|[^,)\r\n]+)/,
+								lookbehind: true,
+								inside: {
+									rest: Prism.languages.javascript
+								}
+							},
+							'attr-name': /[\w-]+(?=\s*!?=|\s*[,)])/,
+							'punctuation': /[!=(),]+/
+						}
+					}
+				],
+				'punctuation': /:/
+			}
+		},
+		'code': [
+			{
+				pattern: /(^[\t ]*(?:-|!?=)).+/m,
+				lookbehind: true,
+				inside: {
+					rest: Prism.languages.javascript
+				}
+			}
+		],
+		'punctuation': /[.\-!=|]+/
+	};
+
+	var filter_pattern = '(^([\\t ]*)):{{filter_name}}((?:\\r?\\n|\\r(?!\\n))(?:\\2[\\t ]+.+|\\s*?(?=\\r?\\n|\\r)))+';
+
+	// Non exhaustive list of available filters and associated languages
+	var filters = [
+		{filter:'atpl',language:'twig'},
+		{filter:'coffee',language:'coffeescript'},
+		'ejs',
+		'handlebars',
+		'hogan',
+		'less',
+		'livescript',
+		'markdown',
+		'mustache',
+		'plates',
+		{filter:'sass',language:'scss'},
+		'stylus',
+		'swig'
+
+	];
+	var all_filters = {};
+	for (var i = 0, l = filters.length; i < l; i++) {
+		var filter = filters[i];
+		filter = typeof filter === 'string' ? {filter: filter, language: filter} : filter;
+		if (Prism.languages[filter.language]) {
+			all_filters['filter-' + filter.filter] = {
+				pattern: RegExp(filter_pattern.replace('{{filter_name}}', filter.filter), 'm'),
+				lookbehind: true,
+				inside: {
+					'filter-name': {
+						pattern: /^:[\w-]+/,
+						alias: 'variable'
+					},
+					rest: Prism.languages[filter.language]
+				}
+			}
+		}
+	}
+
+	Prism.languages.insertBefore('jade', 'filter', all_filters);
+
+}(Prism));
+
+(function (Prism) {
+	var inside = {
+		'url': /url\((["']?).*?\1\)/i,
+		'string': /("|')(?:[^\\\r\n]|\\(?:\r\n|[\s\S]))*?\1/,
+		'interpolation': null, // See below
+		'func': null, // See below
+		'important': /\B!(?:important|optional)\b/i,
+		'keyword': {
+			pattern: /(^|\s+)(?:(?:if|else|for|return|unless)(?=\s+|$)|@[\w-]+)/,
+			lookbehind: true
+		},
+		'hexcode': /#[\da-f]{3,6}/i,
+		'number': /\b\d+(?:\.\d+)?%?/,
+		'boolean': /\b(?:true|false)\b/,
+		'operator': [
+			// We want non-word chars around "-" because it is
+			// accepted in property names.
+			/~|[+!\/%<>?=]=?|[-:]=|\*[*=]?|\.+|&&|\|\||\B-\B|\b(?:and|in|is(?: a| defined| not|nt)?|not|or)\b/
+		],
+		'punctuation': /[{}()\[\];:,]/
+	};
+
+	inside['interpolation'] = {
+		pattern: /\{[^\r\n}:]+\}/,
+		alias: 'variable',
+		inside: Prism.util.clone(inside)
+	};
+	inside['func'] = {
+		pattern: /[\w-]+\([^)]*\).*/,
+		inside: {
+			'function': /^[^(]+/,
+			rest: Prism.util.clone(inside)
+		}
+	};
+
+	Prism.languages.stylus = {
+		'comment': {
+			pattern: /(^|[^\\])(\/\*[\w\W]*?\*\/|\/\/.*)/,
+			lookbehind: true
+		},
+		'atrule-declaration': {
+			pattern: /(^\s*)@.+/m,
+			lookbehind: true,
+			inside: {
+				'atrule': /^@[\w-]+/,
+				rest: inside
+			}
+		},
+		'variable-declaration': {
+			pattern: /(^[ \t]*)[\w$-]+\s*.?=[ \t]*(?:(?:\{[^}]*\}|.+)|$)/m,
+			lookbehind: true,
+			inside: {
+				'variable': /^\S+/,
+				rest: inside
+			}
+		},
+
+		'statement': {
+			pattern: /(^[ \t]*)(?:if|else|for|return|unless)[ \t]+.+/m,
+			lookbehind: true,
+			inside: {
+				keyword: /^\S+/,
+				rest: inside
+			}
+		},
+
+		// A property/value pair cannot end with a comma or a brace
+		// It cannot have indented content unless it ended with a semicolon
+		'property-declaration': {
+			pattern: /((?:^|\{)([ \t]*))(?:[\w-]|\{[^}\r\n]+\})+(?:\s*:\s*|[ \t]+)[^{\r\n]*(?:;|[^{\r\n,](?=$)(?!(\r?\n|\r)(?:\{|\2[ \t]+)))/m,
+			lookbehind: true,
+			inside: {
+				'property': {
+					pattern: /^[^\s:]+/,
+					inside: {
+						'interpolation': inside.interpolation
+					}
+				},
+				rest: inside
+			}
+		},
+
+
+
+		// A selector can contain parentheses only as part of a pseudo-element
+		// It can span multiple lines.
+		// It must end with a comma or an accolade or have indented content.
+		'selector': {
+			pattern: /(^[ \t]*)(?:(?=\S)(?:[^{}\r\n:()]|::?[\w-]+(?:\([^)\r\n]*\))?|\{[^}\r\n]+\})+)(?:(?:\r?\n|\r)(?:\1(?:(?=\S)(?:[^{}\r\n:()]|::?[\w-]+(?:\([^)\r\n]*\))?|\{[^}\r\n]+\})+)))*(?:,$|\{|(?=(?:\r?\n|\r)(?:\{|\1[ \t]+)))/m,
+			lookbehind: true,
+			inside: {
+				'interpolation': inside.interpolation,
+				'punctuation': /[{},]/
+			}
+		},
+
+		'func': inside.func,
+		'string': inside.string,
+		'interpolation': inside.interpolation,
+		'punctuation': /[{}()\[\];:.]/
+	};
+}(Prism));
+
+(function() {
+
+if (typeof self === 'undefined' || !self.Prism || !self.document) {
+	return;
+}
+
+Prism.hooks.add('complete', function (env) {
+	if (!env.code) {
+		return;
+	}
+	
+	// works only for <code> wrapped inside <pre> (not inline)
+	var pre = env.element.parentNode;
+	var clsReg = /\s*\bline-numbers\b\s*/;
+	if (
+		!pre || !/pre/i.test(pre.nodeName) ||
+			// Abort only if nor the <pre> nor the <code> have the class
+		(!clsReg.test(pre.className) && !clsReg.test(env.element.className))
+	) {
+		return;
+	}
+
+	if (env.element.querySelector(".line-numbers-rows")) {
+		// Abort if line numbers already exists
+		return;
+	}
+
+	if (clsReg.test(env.element.className)) {
+		// Remove the class "line-numbers" from the <code>
+		env.element.className = env.element.className.replace(clsReg, '');
+	}
+	if (!clsReg.test(pre.className)) {
+		// Add the class "line-numbers" to the <pre>
+		pre.className += ' line-numbers';
+	}
+
+	var match = env.code.match(/\n(?!$)/g);
+	var linesNum = match ? match.length + 1 : 1;
+	var lineNumbersWrapper;
+
+	var lines = new Array(linesNum + 1);
+	lines = lines.join('<span></span>');
+
+	lineNumbersWrapper = document.createElement('span');
+	lineNumbersWrapper.className = 'line-numbers-rows';
+	lineNumbersWrapper.innerHTML = lines;
+
+	if (pre.hasAttribute('data-start')) {
+		pre.style.counterReset = 'linenumber ' + (parseInt(pre.getAttribute('data-start'), 10) - 1);
+	}
+
+	env.element.appendChild(lineNumbersWrapper);
+
+});
+
+}());
+
 module.exports = Prism;
 },{"prismjs":8}],13:[function(require,module,exports){
-var index = require('./index.txt');
-var readme = require('./readme.txt');
-var packageJson = require('./package.txt');
+module.exports = "var gulp = require('gulp'),\n\twebServer = require('gulp-webserver'),\n\tstylus = require('gulp-stylus'),\n\tnib = require('nib'),\n\tjadeify = require('jadeify'),\n\tbrowserify =  require('browserify'),\n\tbuffer = require('vinyl-buffer'),\n\tjade = require('gulp-jade'),\n\tstringify = require('stringify'),\n\tsource = require('vinyl-source-stream');\n\nvar config = {\n\tstyles: {\n\t\tmain: './src/styles/main.styl',\n\t\twatch: './src/styles/**/*.styl',\n\t\toutput: './build/css'\n\t},\n\n\tjade: {\n\t\tmain: './src/index.jade',\n\t\twatch: './src/**/*jade',\n\t\toutput: './build'\n\t},\n\n\tscripts: {\n\t\tmain: './src/scripts/main.js',\n\t\twatch: ['./src/scripts/**/*.js', './gulpfile.js'],\n\t\toutput: './build/js'\n\t},\n\n\tcopy: {\n\t\tmain: './src/assets/icon-fonts/*',\n\t\toutput: './build/css/icon-fonts'\n\t}\n}\n\ngulp.task('server', function () {\n\tgulp.src('./build')\n\t.pipe(webServer({\n\t\thost: '0.0.0.0',\n\t\tport: 8080,\n\t\tlivereload: true,\n      \topen: true\n\t}));\n});\n\ngulp.task('build:copy', function () {\n\tgulp.src(config.copy.main)\n  .pipe(gulp.dest(config.copy.output));\n});\n\ngulp.task('build:scripts', function() {\n\treturn browserify({\n    entries: config.scripts.main,\n    transform: [jadeify, stringify,]\n  })\n  .bundle()\n  .pipe(source('main.js'))\n  .pipe(buffer())\n  .pipe(gulp.dest(config.scripts.output))\n});\n\ngulp.task('build:css', function () {\n\tgulp.src(config.styles.main)\n\t.pipe(stylus({\n\t\tuse: nib(),\n\t\t'include css': true\n\t}))\n\t.pipe(gulp.dest(config.styles.output));\n});\n\ngulp.task('build:jade', function () {\n\tgulp.src(config.jade.main)\n\t.pipe(jade())\n\t.pipe(gulp.dest(config.jade.output));\n});\n\ngulp.task('watch', function () {\n\tgulp.watch(config.styles.watch, ['build:css']);\n\tgulp.watch(config.jade.watch, ['build:jade', 'build:scripts']);\n\tgulp.watch(config.scripts.watch, ['build:scripts']);\n});\n\ngulp.task('build', [ 'build:jade', 'build:scripts', 'build:css', 'build:copy']);\ngulp.task('default', ['server', 'build', 'watch']);";
 
-module.exports = {
-	index: index,
-	readme: readme,
-	'package': packageJson
-}
-},{"./index.txt":14,"./package.txt":15,"./readme.txt":16}],14:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n\t<meta charset=\"UTF-8\">\n\t<meta name=\"viewport\" content=\"initial-scale=1, maximum-scale=1\">\n\t<meta description=\"\">\n\t<title>Alberto D.Sosa</title>\n\t<link rel=\"stylesheet\" href=\"css/main.css\">\n</head>\n<body>\n\t<div class=\"container\">\n\t\t<header class=\"header\">\n\t\t\t\n\t\t</header>\n\t\t<section class=\"body\">\n\t\t\t\n\t\t</section>\n\t\t<footer class=\"footer\">\n\t\t\t<div class=\"footer-info\">Alberto D.Sosa - 2016</div>\n\t\t</footer>\n\t</div>\n\t<script src=\"js/main.js\"></script>\n</body>\n</html>";
 
 },{}],15:[function(require,module,exports){
-module.exports = "{\n  \"name\": \"my-site\",\n  \"version\": \"0.0.1\",\n  \"description\": \"My web site\",\n  \"main\": \"gulpfile.js\",\n  \"scripts\": {\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n  },\n  \"author\": \"Alberto D.Sosa\",\n  \"license\": \"MIT\",\n  \"devDependencies\": {\n    \"browserify\": \"^13.0.1\",\n    \"gulp\": \"^3.9.1\",\n    \"gulp-copy\": \"0.0.2\",\n    \"gulp-jade\": \"^1.1.0\",\n    \"gulp-stylus\": \"^2.1.0\",\n    \"gulp-uglify\": \"^1.5.4\",\n    \"gulp-webserver\": \"^0.9.1\",\n    \"jade\": \"^1.11.0\",\n    \"jadeify\": \"^4.6.0\",\n    \"nib\": \"^1.1.0\",\n    \"stringify\": \"^5.1.0\",\n    \"vinyl-buffer\": \"^1.0.0\",\n    \"vinyl-source-stream\": \"^1.1.0\"\n  },\n  \"dependencies\": {\n    \"jquery\": \"^3.0.0\",\n    \"page\": \"^1.7.1\",\n    \"prismjs\": \"^1.5.1\"\n  }\n}";
+module.exports = "doctype html\nhtml(lang=\"es\")\n\thead\n\t\tmeta(charset=\"UTF-8\")\n\t\tmeta(name=\"viewport\", content=\"initial-scale=1, maximum-scale=1\")\n\t\ttitle Alberto D.Sosa\n\t\tlink(rel=\"stylesheet\", href=\"css/main.css\")\n\tbody\n\t\t.container\n\t\tscript(src=\"js/main.js\")";
 
 },{}],16:[function(require,module,exports){
+var indexHTML = require('./index-html.txt');
+var readmeMD = require('./readme.txt');
+var packageJSON = require('./package.txt');
+var indexJADE = require('./index-jade.txt');
+var gulpfileJS = require('./gulpfile.txt');
+
+module.exports = {
+	indexHTML: indexHTML,
+	readmeMD: readmeMD,
+	packageJSON: packageJSON,
+	indexJADE: indexJADE,
+	gulpfileJS: gulpfileJS
+}
+},{"./gulpfile.txt":13,"./index-html.txt":14,"./index-jade.txt":15,"./package.txt":17,"./readme.txt":18}],17:[function(require,module,exports){
+module.exports = "{\n  \"name\": \"my-site\",\n  \"version\": \"0.0.1\",\n  \"description\": \"My web site\",\n  \"main\": \"gulpfile.js\",\n  \"scripts\": {\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n  },\n  \"author\": \"Alberto D.Sosa\",\n  \"license\": \"MIT\",\n  \"devDependencies\": {\n    \"browserify\": \"^13.0.1\",\n    \"gulp\": \"^3.9.1\",\n    \"gulp-copy\": \"0.0.2\",\n    \"gulp-jade\": \"^1.1.0\",\n    \"gulp-stylus\": \"^2.1.0\",\n    \"gulp-uglify\": \"^1.5.4\",\n    \"gulp-webserver\": \"^0.9.1\",\n    \"jade\": \"^1.11.0\",\n    \"jadeify\": \"^4.6.0\",\n    \"nib\": \"^1.1.0\",\n    \"stringify\": \"^5.1.0\",\n    \"vinyl-buffer\": \"^1.0.0\",\n    \"vinyl-source-stream\": \"^1.1.0\"\n  },\n  \"dependencies\": {\n    \"jquery\": \"^3.0.0\",\n    \"page\": \"^1.7.1\",\n    \"prismjs\": \"^1.5.1\"\n  }\n}";
+
+},{}],18:[function(require,module,exports){
 module.exports = "\n### Bienvenido a mi web";
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var jade = require("jade/runtime");
 
 module.exports = function template(locals) {
@@ -12686,13 +13067,13 @@ var buf = [];
 var jade_mixins = {};
 var jade_interp;
 ;var locals_for_with = (locals || {});(function (file) {
-buf.push("<header class=\"header\"><nav class=\"header-nav\"><ul class=\"header-nav--list\"><li class=\"header-nav--item\">File</li><li class=\"header-nav--item\">Edit</li><li class=\"header-nav--item\">Selection</li><li class=\"header-nav--item\">Find</li><li class=\"header-nav--item\">View</li><li class=\"header-nav--item\">GoTo</li><li class=\"header-nav--item\">Tools</li><li class=\"header-nav--item\">Project</li><li class=\"header-nav--item\">Preferences</li><li class=\"header-nav--item\">Help</li></ul></nav></header><section class=\"body\"><aside class=\"body-sidebar\"><div class=\"body-sidebar--openFiles\"><h4>OPEN FILES</h4><ul class=\"sidebar-openFiles--list\"><li class=\"sidebar-openFiles--file\"><span class=\"icon icon-cross\"></span>" + (jade.escape((jade_interp = file) == null ? '' : jade_interp)) + "</li></ul></div><div class=\"body-sidebar--folders\"><h4>FOLDERS</h4><ul class=\"sidebar-folders--list\"><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>bin</li><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>build<div class=\"folder-open\"><ul class=\"folder-open--list\"><li class=\"folder-open--file\"><span class=\"icon icon-file-text2\"></span>index.html</li></ul></div></li><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>src</li><li class=\"sidebar-folders--file\"><span class=\"icon icon-file-text2\"></span>readme.md</li><li class=\"sidebar-folders--file\"><span class=\"icon icon-file-text2\"></span>package.json</li></ul></div></aside><article class=\"body-content\"><nav class=\"body-content--nav\"><ul class=\"body-content--nav__list\"><li class=\"tab body-content--nav__tabActive\">" + (jade.escape((jade_interp = file) == null ? '' : jade_interp)) + "<span class=\"icon icon-cross\"></span></li></ul></nav><div class=\"body-content--code\"><pre class=\"line-numbers\"><code></code></pre></div></article></section><footer class=\"footer\"><div class=\"footer-info\">Alberto D.Sosa - 2016</div></footer>");}.call(this,"file" in locals_for_with?locals_for_with.file:typeof file!=="undefined"?file:undefined));;return buf.join("");
+buf.push("<header class=\"header\"><nav class=\"header-nav\"><ul class=\"header-nav--list\"><li class=\"header-nav--item\">File</li><li class=\"header-nav--item\">Edit</li><li class=\"header-nav--item\">Selection</li><li class=\"header-nav--item\">Find</li><li class=\"header-nav--item\">View</li><li class=\"header-nav--item\">GoTo</li><li class=\"header-nav--item\">Tools</li><li class=\"header-nav--item\">Project</li><li class=\"header-nav--item\">Preferences</li><li class=\"header-nav--item\">Help</li></ul></nav></header><section class=\"body\"><aside class=\"body-sidebar\"><div class=\"body-sidebar--openFiles\"><h4>OPEN FILES</h4><ul class=\"sidebar-openFiles--list\"><li class=\"sidebar-openFiles--file\"><span class=\"icon icon-cross\"></span>" + (jade.escape((jade_interp = file) == null ? '' : jade_interp)) + "</li></ul></div><div class=\"body-sidebar--folders\"><h4>FOLDERS</h4><ul class=\"sidebar-folders--list\"><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>bin</li><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>build<div class=\"folder-open\"><ul class=\"folder-open--list\"><li class=\"folder-open--file\"><span class=\"icon icon-file-text2\"></span>index.html</li><li class=\"folder-open--file\"><span class=\"icon icon-file-text2\"></span>main.js</li><li class=\"folder-open--file\"><span class=\"icon icon-file-text2\"></span>main.css</li></ul></div></li><li class=\"sidebar-folders--folder\"><span class=\"icon icon-folder\"></span>src<div class=\"folder-open\"><ul class=\"folder-open--list\"><li class=\"folder-open--file\"><span class=\"icon icon-file-text2\"></span>index.jade</li><li class=\"folder-open--file\"><span class=\"icon icon-file-text2\"></span>index.js</li><li class=\"folder-open--file\"><span class=\"icon icon-file-text2\"></span>main.styl</li></ul></div></li><li class=\"sidebar-folders--file\"><span class=\"icon icon-file-text2\"></span>readme.md</li><li class=\"sidebar-folders--file\"><span class=\"icon icon-file-text2\"></span>package.json</li><li class=\"sidebar-folders--file\"><span class=\"icon icon-file-text2\"></span>gulpfile.js</li></ul></div></aside><article class=\"body-content\"><nav class=\"body-content--nav\"><ul class=\"body-content--nav__list\"><li class=\"tab body-content--nav__tabActive\">" + (jade.escape((jade_interp = file) == null ? '' : jade_interp)) + "<span class=\"icon icon-cross\"></span></li></ul></nav><div class=\"body-content--code\"><pre class=\"line-numbers\"><code></code></pre></div></article></section><footer class=\"footer\"><div class=\"footer-info\">Alberto D.Sosa - 2016</div></footer>");}.call(this,"file" in locals_for_with?locals_for_with.file:typeof file!=="undefined"?file:undefined));;return buf.join("");
 };
-},{"jade/runtime":4}],18:[function(require,module,exports){
+},{"jade/runtime":4}],20:[function(require,module,exports){
 var $ = require('jquery');
 var page = require('page');
 var homeTemplate = require('./home.jade');
-var Prism = require('prismjs');
+var Prism = require('../prism');
 var code = require('./codes/');
 
 // Home
@@ -12706,7 +13087,7 @@ function home () {
 	.html(homeTemplate(defaultLocals))
 	.promise()
 	.done(function () {
-		var html = Prism.highlight(code.index, Prism.languages.markup);
+		var html = Prism.highlight(code.indexHTML, Prism.languages.markup);
 		$('code')
 			.addClass('language-markup')
 			.html(html);
@@ -12716,7 +13097,7 @@ function home () {
 page('/', home);
 
 
-},{"./codes/":13,"./home.jade":17,"jquery":5,"page":6,"prismjs":8}],19:[function(require,module,exports){
+},{"../prism":12,"./codes/":16,"./home.jade":19,"jquery":5,"page":6}],21:[function(require,module,exports){
 var jade = require("jade/runtime");
 
 module.exports = function template(locals) {
@@ -12726,7 +13107,7 @@ var jade_interp;
 ;var locals_for_with = (locals || {});(function (file) {
 buf.push("<li class=\"sidebar-openFiles--file\"><span class=\"icon icon-cross\"></span>" + (jade.escape((jade_interp = file) == null ? '' : jade_interp)) + "</li>");}.call(this,"file" in locals_for_with?locals_for_with.file:typeof file!=="undefined"?file:undefined));;return buf.join("");
 };
-},{"jade/runtime":4}],20:[function(require,module,exports){
+},{"jade/runtime":4}],22:[function(require,module,exports){
 var jade = require("jade/runtime");
 
 module.exports = function template(locals) {
