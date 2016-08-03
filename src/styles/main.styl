@@ -20,9 +20,13 @@ body
 pre
 	margin 0 !important
 	height 100%
-
 ::selection
-	background transparent
+	background-color transparent	
+code
+	padding-bottom 8em
+	
+code ::selection
+	background-color greySidebar
 	
 .container
 	width 100vw
@@ -90,13 +94,13 @@ pre
 			height 100%
 			position relative
 			top 1.8em
-			z-index 0
 
 .folder-open
 	display none
 	background-color greySidebar
 	&--file
 		margin-left .5em
+		padding .1em 0
 	&--list
 		padding .1em 0
 			

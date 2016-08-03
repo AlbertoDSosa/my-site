@@ -1,0 +1,8 @@
+// File Stylus
+
+@import reset.css
+
+variable = loquesea
+
+.clase
+	background-color purple

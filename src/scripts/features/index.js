@@ -24,19 +24,29 @@ Features.prototype.addCode = function(file) {
 	var fileAtr = dom.getFileAtr(file);
 	var codeText = codes[dom.getCode(file)];
 	var language = dom.getLanguage(fileAtr.fileExt);
-	var html = Prism.highlight(codeText, Prism.languages[language]);
 	
-	$('code')
-		.removeClass()
-		.addClass('language-'+ language)
-		.html(html);
+	if(language === 'unknown'){
+		$('code')
+			.removeClass()
+			.html(codeText);
+	} else {
 
-	var env = {
-		code: html,
-		element: $('code').get()[0]
+		var html = Prism.highlight(codeText, Prism.languages[language]);
+
+		$('code')
+			.removeClass()
+			.addClass('language-'+ language)
+			.html(html);
+
+		var env = {
+			code: html,
+			element: $('code').get()[0]
+		}
+
+		Prism.hooks.run('complete', env);
 	}
 
-	Prism.hooks.run('complete', env);
+
 };
 
 

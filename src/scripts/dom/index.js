@@ -37,6 +37,10 @@ DomElements.prototype.getLanguage = function(fileExt) {
 		return 'markdown';
 	} else if(fileExt === 'html') {
 		return 'markup'
+	} else if(fileExt === 'styl') {
+		return 'stylus'
+	} else if(fileExt === 'zip') {
+		return 'unknown'
 	} else {
 		return fileExt;
 	}
@@ -59,7 +63,11 @@ DomElements.prototype.getFile = function(element) {
 
 DomElements.prototype.getCode = function(file) {
 	var fileAtr = this.getFileAtr(file);
-	return fileAtr.fileName + fileAtr.fileExt.toUpperCase();	
+	if(fileAtr.fileExt === 'zip'){
+		return fileAtr.fileName;
+	} else {
+		return fileAtr.fileName + fileAtr.fileExt.toUpperCase();	
+	}
 };
 
 module.exports = DomElements;
