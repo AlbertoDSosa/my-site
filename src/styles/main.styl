@@ -20,12 +20,18 @@ body
 pre
 	margin 0 !important
 	height 100%
+	
 ::selection
 	background-color transparent	
+	
 code
 	padding-bottom 8em
 	
-code ::selection
+li, span .icon
+	cursor pointer
+	
+code ::selection,	
+code::selection
 	background-color greySidebar
 	
 .container
