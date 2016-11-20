@@ -20,12 +20,12 @@ body
 pre
 	margin 0 !important
 	height 100%
-	
+
 ::selection
 	background-color transparent	
 	
 code
-	padding-bottom 8em
+	padding 0 0 8em 0
 	
 li, span .icon
 	cursor pointer
@@ -52,7 +52,18 @@ code::selection
 		&--item__active
 			border 1px solid greyContent
 			border-radius 5px 5px 0 0
-
+	&-social
+		&--list
+			display inline-flex
+			float right
+		&--item
+			color greySidebar
+			margin-right .6em
+			padding .2em 0	
+			a
+				color greySidebar
+				text-decoration none
+			
 .body
 	background greyBackground
 	width 100%
@@ -156,4 +167,9 @@ code::selection
 	&-info
 		padding 0.2em .6em 
 		color greySidebar
+	&-lang
+		padding 0 .6em 
+		color greySidebar
+		float right
+		display inline-flex
 	

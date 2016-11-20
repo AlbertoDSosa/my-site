@@ -1,13 +1,12 @@
 var gulp = require('gulp'),
-	webServer = require('gulp-webserver'),
-	stylus = require('gulp-stylus'),
-	nib = require('nib'),
-	jadeify = require('jadeify'),
-	browserify =  require('browserify'),
-	buffer = require('vinyl-buffer'),
-	jade = require('gulp-jade'),
-	stringify = require('stringify'),
-	source = require('vinyl-source-stream');
+		webServer = require('gulp-webserver'),
+		stylus = require('gulp-stylus'),
+		nib = require('nib'),
+		jadeify = require('jadeify'),
+		browserify =  require('browserify'),
+		pug = require('gulp-pug'),
+		stringify = require('stringify'),
+		source = require('vinyl-source-stream');
 
 var config = {
 	styles: {
@@ -16,9 +15,9 @@ var config = {
 		output: './build/css'
 	},
 
-	jade: {
+	pug: {
 		main: './src/index.jade',
-		watch: './src/**/*jade',
+		watch: './src/**/*.jade',
 		output: './build'
 	},
 
@@ -31,16 +30,18 @@ var config = {
 	copy: {
 		main: './src/assets/icon-fonts/*',
 		output: './build/css/icon-fonts'
-	}
+	},
+
+	codes: './src/scripts/templates/codes/*.txt'
 }
 
-gulp.task('server', function () {
+gulp.task('server', ['build'], function () {
 	gulp.src('./build')
 	.pipe(webServer({
 		host: '0.0.0.0',
 		port: 8080,
 		livereload: true,
-      	open: true
+    open: true
 	}));
 });
 
@@ -50,17 +51,16 @@ gulp.task('build:copy', function () {
 });
 
 gulp.task('build:scripts', function() {
-	return browserify({
-    entries: config.scripts.main,
-    transform: [jadeify, stringify,]
-  })
+	return browserify(config.scripts.main)
+	.transform(jadeify)
+	.transform(stringify)
   .bundle()
+  .on('error', function (err) { console.log(err); this.emit('end') })
   .pipe(source('main.js'))
-  .pipe(buffer())
   .pipe(gulp.dest(config.scripts.output))
 });
 
-gulp.task('build:css', function () {
+gulp.task('build:css', ['build:copy'], function () {
 	gulp.src(config.styles.main)
 	.pipe(stylus({
 		use: nib(),
@@ -69,17 +69,18 @@ gulp.task('build:css', function () {
 	.pipe(gulp.dest(config.styles.output));
 });
 
-gulp.task('build:jade', function () {
-	gulp.src(config.jade.main)
-	.pipe(jade())
-	.pipe(gulp.dest(config.jade.output));
+gulp.task('build:pug', ['build:scripts'], function () {
+	gulp.src(config.pug.main)
+	.pipe(pug({pretty: true}))
+	.pipe(gulp.dest(config.pug.output));
 });
 
 gulp.task('watch', function () {
 	gulp.watch(config.styles.watch, ['build:css']);
-	gulp.watch(config.jade.watch, ['build:jade', 'build:scripts']);
+	gulp.watch(config.pug.watch, ['build:scripts']);
 	gulp.watch(config.scripts.watch, ['build:scripts']);
+	gulp.watch(config.codes, ['build:scripts']);
 });
 
-gulp.task('build', [ 'build:jade', 'build:scripts', 'build:css', 'build:copy']);
+gulp.task('build', [ 'build:pug', 'build:scripts', 'build:css', 'build:copy']);
 gulp.task('default', ['server', 'build', 'watch']);

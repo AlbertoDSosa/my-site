@@ -25,10 +25,17 @@ Features.prototype.addCode = function(file) {
 	var codeText = codes[dom.getCode(file)];
 	var language = dom.getLanguage(fileAtr.fileExt);
 	
+	if (language === 'markup') {
+		language = 'html';
+	} else if (language === 'js') {
+		language = 'javascript'
+	}
+	
 	if(language === 'unknown'){
 		$('code')
 			.removeClass()
 			.html(codeText);
+		$('.footer-lang').text('unknown')
 	} else {
 
 		var html = Prism.highlight(codeText, Prism.languages[language]);
@@ -37,6 +44,8 @@ Features.prototype.addCode = function(file) {
 			.removeClass()
 			.addClass('language-'+ language)
 			.html(html);
+
+		$('.footer-lang').text(language)
 
 		var env = {
 			code: html,

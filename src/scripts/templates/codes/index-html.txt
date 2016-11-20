@@ -3,17 +3,20 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
-	<meta description="">
+	<meta description="Sitio web de Alberto D.Sosa">
 	<title>Alberto D.Sosa</title>
 	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 	<div class="container">
 		<header class="header">
-			
+			Bienvenido a mi sitio web
 		</header>
 		<section class="body">
-			
+            Utiliza este sitio como si fuera un editor de código,
+            navega por los archivos de tu izquierda para encontrar
+            información sobre mí y lo que hago. Para una información
+            más extensa abre el archivo "readme.md"
 		</section>
 		<footer class="footer">
 			<div class="footer-info">Alberto D.Sosa - 2016</div>

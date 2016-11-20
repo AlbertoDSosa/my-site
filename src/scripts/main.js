@@ -27,6 +27,8 @@ $(document).ready(function () {
 
 	dom.tab.on('click',features.changeTab);
 	dom.openFiles.on('click', features.changeTab);
+
+	
 });
 
 page();
