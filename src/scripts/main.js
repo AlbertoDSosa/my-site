@@ -1,36 +1,36 @@
 var $ = require('jquery');
 
-var code = require('./templates/codes/');
-var Prism = require('./prism');
-var template = require('./templates/layout.jade');
-var Dom = require('./dom')
-var features = require('./features');
-
-var defaultLocals = {
-	file: 'index.html',
-	lang: 'html'
-};
-
-if (localStorage.dom) {
-
-	$('.container')
-		.html(localStorage.dom);
-
-} else {
-
-	$('.container')
-		.html(template(defaultLocals))
-		.promise()
-		.done(function () {
-			var html = Prism.highlight(code.indexHTML, Prism.languages.markup);
-			$('code')
-				.addClass('language-markup')
-				.html(html);
-	});
-}
-
 $(document).ready(function () {
-	
+
+	var code = require('./templates/codes/');
+	var Prism = require('./prism');
+	var template = require('./templates/layout.jade');
+	var Dom = require('./dom')
+	var features = require('./features');
+
+	var defaultLocals = {
+		file: 'index.html',
+		lang: 'html'
+	};
+
+	if (localStorage.dom) {
+
+		$('.container')
+			.html(localStorage.dom);
+
+	} else {
+
+		$('.container')
+			.html(template(defaultLocals))
+			.promise()
+			.done(function () {
+				var html = Prism.highlight(code.indexHTML, Prism.languages.markup);
+				$('code')
+					.addClass('language-markup')
+					.html(html);
+		});
+	}
+
 	var dom = new Dom();
 
 	dom.iconFolder.on('click', features.activeFolders)
@@ -41,7 +41,7 @@ $(document).ready(function () {
 	dom.tab.on('click', features.changeTab);
 	dom.openFiles.on('click', features.changeTab);
 	dom.iconCross.on('click', features.closeFile);
-	
+
 })
 
 

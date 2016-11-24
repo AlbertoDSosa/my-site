@@ -214,6 +214,10 @@ var closeFile = function(event) {
 				addCode(file); 
 			}
 		}
+	})
+	.promise()
+	.done(function () {
+		localStorage.dom = $('.container').html()
 	});
 }
 
