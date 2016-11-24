@@ -3,6 +3,7 @@ var $ = require('jquery');
 function DomElements (event) {
 	event = event || {};
 	this.element = $(event.target);
+	this.content = $('.container');
 
 	// Icons
 
@@ -35,12 +36,12 @@ function DomElements (event) {
 DomElements.prototype.getLanguage = function(fileExt) {
 	if(fileExt === 'md') {
 		return 'markdown';
-	} else if(fileExt === 'html') {
-		return 'markup'
 	} else if(fileExt === 'styl') {
 		return 'stylus'
 	} else if(fileExt === 'zip') {
 		return 'unknown'
+	} else if (fileExt === 'js') {
+		return 'javascript'
 	} else {
 		return fileExt;
 	}

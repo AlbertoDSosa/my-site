@@ -1,3 +1,5 @@
+// Motor de templates Jade ahora (Pug)
+
 doctype html
 html(lang="es")
 	head

@@ -8,6 +8,7 @@ var indexJS = require('./index-js.txt');
 var mainCSS = require('./main-css.txt');
 var mainJS = require('./main-js.txt');
 var mainSTYL = require('./main-styl.txt');
+var aboutMD = require('./about.txt')
 
 module.exports = {
 	index: index,
@@ -19,5 +20,6 @@ module.exports = {
 	gulpfileJS: gulpfileJS,
 	mainCSS: mainCSS,
 	mainJS: mainJS,
-	mainSTYL: mainSTYL
+	mainSTYL: mainSTYL,
+	aboutMD: aboutMD
 }

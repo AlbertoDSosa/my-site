@@ -1,85 +1,14 @@
-var gulp = require('gulp'),
-	webServer = require('gulp-webserver'),
-	stylus = require('gulp-stylus'),
-	nib = require('nib'),
-	jadeify = require('jadeify'),
-	browserify =  require('browserify'),
-	buffer = require('vinyl-buffer'),
-	jade = require('gulp-jade'),
-	stringify = require('stringify'),
-	source = require('vinyl-source-stream');
+// Task Runner [Gulp](http://gulpjs.com/)
 
-var config = {
-	styles: {
-		main: './src/styles/main.styl',
-		watch: './src/styles/**/*.styl',
-		output: './build/css'
-	},
-
-	jade: {
-		main: './src/index.jade',
-		watch: './src/**/*jade',
-		output: './build'
-	},
-
-	scripts: {
-		main: './src/scripts/main.js',
-		watch: ['./src/scripts/**/*.js', './gulpfile.js'],
-		output: './build/js'
-	},
-
-	copy: {
-		main: './src/assets/icon-fonts/*',
-		output: './build/css/icon-fonts'
-	}
-}
-
-gulp.task('server', function () {
-	gulp.src('./build')
-	.pipe(webServer({
-		host: '0.0.0.0',
-		port: 8080,
-		livereload: true,
-      	open: true
-	}));
-});
-
-gulp.task('build:copy', function () {
-	gulp.src(config.copy.main)
-  .pipe(gulp.dest(config.copy.output));
-});
-
-gulp.task('build:scripts', function() {
-	return browserify({
-    entries: config.scripts.main,
-    transform: [jadeify, stringify,]
-  })
-  .bundle()
-  .pipe(source('main.js'))
-  .pipe(buffer())
-  .pipe(gulp.dest(config.scripts.output))
-});
+var gulp = require('gulp')
 
 gulp.task('build:css', function () {
-	gulp.src(config.styles.main)
+	gulp.src('src/styles/estilos.styl')
 	.pipe(stylus({
 		use: nib(),
 		'include css': true
 	}))
-	.pipe(gulp.dest(config.styles.output));
+	.pipe(gulp.dest(build/main.css));
 });
 
-gulp.task('build:jade', function () {
-	gulp.src(config.jade.main)
-	.pipe(jade())
-	.pipe(gulp.dest(config.jade.output));
-});
-
-gulp.task('watch', function () {
-	gulp.watch(config.styles.watch, ['build:css']);
-	gulp.watch(config.jade.watch, ['build:jade', 'build:scripts']);
-	gulp.watch(config.scripts.watch, ['build:scripts']);
-});
-
-gulp.task('build', [ 'build:jade', 'build:scripts', 'build:css', 'build:copy']);
-gulp.task('default', ['server', 'build', 'watch']);
+gulp.task('default', ['build:css']);

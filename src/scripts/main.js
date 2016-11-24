@@ -1,34 +1,47 @@
 var $ = require('jquery');
-var page = require('page');
-var Dom = require('./dom');
-require('./templates/home');
 
-// Extender lenguajes
+var code = require('./templates/codes/');
+var Prism = require('./prism');
+var template = require('./templates/layout.jade');
+var Dom = require('./dom')
+var features = require('./features');
 
-var Features = require('./features');
-var features = new Features();
+var defaultLocals = {
+	file: 'index.html',
+	lang: 'html'
+};
+
+if (localStorage.dom) {
+
+	$('.container')
+		.html(localStorage.dom);
+
+} else {
+
+	$('.container')
+		.html(template(defaultLocals))
+		.promise()
+		.done(function () {
+			var html = Prism.highlight(code.indexHTML, Prism.languages.markup);
+			$('code')
+				.addClass('language-markup')
+				.html(html);
+	});
+}
 
 $(document).ready(function () {
+	
 	var dom = new Dom();
 
-	// Listeners
-
-	dom.iconFolder.on('click', features.activeFolders);
-
+	dom.iconFolder.on('click', features.activeFolders)
+	dom.files.on('click', dom.iconFilesClass ,features.filesPreview);
+	dom.$files.on('click', dom.iconFilesClass ,features.filesPreview);
 	dom.$files.on('dblclick', dom.iconFilesClass, features.openFile);
-
 	dom.files.on('dblclick', dom.iconFilesClass, features.openFile);
-
-	dom.iconCross.on('click', features.closeFile);
-
-	dom.files.on('click', dom.iconFilesClass, features.filesPreview);
-
-	dom.$files.on('click',dom.iconFilesClass, features.filesPreview);
-
-	dom.tab.on('click',features.changeTab);
+	dom.tab.on('click', features.changeTab);
 	dom.openFiles.on('click', features.changeTab);
-
+	dom.iconCross.on('click', features.closeFile);
 	
-});
+})
 
-page();
+

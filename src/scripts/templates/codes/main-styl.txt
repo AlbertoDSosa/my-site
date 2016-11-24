@@ -1,6 +1,8 @@
-// File Stylus
+// Procesador de estilos CSS Stylus
 
-@import reset.css
+@import 'reset.css'
+@import 'nib'
+
 
 variable = loquesea
 
