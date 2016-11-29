@@ -1,3 +1,5 @@
 // File Javascript
 
 var foo = require('./foo');
+
+foo.hola('!Domino JavaScript¡');

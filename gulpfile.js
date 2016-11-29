@@ -27,12 +27,16 @@ var config = {
 		output: './build/js'
 	},
 
-	copy: {
+	fonts: {
 		main: './src/assets/icon-fonts/*',
 		output: './build/css/icon-fonts'
 	},
 
-	codes: './src/scripts/templates/codes/*.txt'
+	codes: './src/scripts/templates/codes/*.txt',
+	img: {
+		main: './src/assets/images/*',
+		output: './build/img'
+	}
 }
 
 gulp.task('server', ['build'], function () {
@@ -46,8 +50,10 @@ gulp.task('server', ['build'], function () {
 });
 
 gulp.task('build:copy', function () {
-	gulp.src(config.copy.main)
-  .pipe(gulp.dest(config.copy.output));
+	gulp.src(config.fonts.main)
+  .pipe(gulp.dest(config.fonts.output));
+  gulp.src(config.img.main)
+  .pipe(gulp.dest(config.img.output));
 });
 
 gulp.task('build:scripts', function() {
