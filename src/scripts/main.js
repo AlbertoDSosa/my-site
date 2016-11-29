@@ -1,11 +1,11 @@
 var $ = require('jquery');
 
-$(document).ready(function () {
+$(function () {
 
 	var code = require('./templates/codes/');
 	var Prism = require('./prism');
 	var template = require('./templates/layout.jade');
-	var Dom = require('./dom')
+	var Dom = require('./dom');
 	var features = require('./features');
 
 	var defaultLocals = {
@@ -28,12 +28,13 @@ $(document).ready(function () {
 				$('code')
 					.addClass('language-markup')
 					.html(html);
-		});
+			});
 	}
 
 	var dom = new Dom();
 
-	dom.iconFolder.on('click', features.activeFolders)
+	dom.iconFolder.on('click', features.activeFolders);
+	dom.iconFolderOpen.on('click', features.activeFolders);
 	dom.files.on('click', dom.iconFilesClass ,features.filesPreview);
 	dom.$files.on('click', dom.iconFilesClass ,features.filesPreview);
 	dom.$files.on('dblclick', dom.iconFilesClass, features.openFile);
@@ -43,5 +44,6 @@ $(document).ready(function () {
 	dom.iconCross.on('click', features.closeFile);
 
 })
+
 
 

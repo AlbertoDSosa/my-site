@@ -1,4 +1,4 @@
-// Task Runner [Gulp](http://gulpjs.com/)
+// Task Runner Gulp
 
 var gulp = require('gulp')
 

@@ -9,6 +9,7 @@ function DomElements (event) {
 
 	this.iconCross = $('span.icon-cross');
 	this.iconFolder = $('span.icon-folder');
+	this.iconFolderOpen = $('span.icon-folder-open');
 	this.iconFile = $('span.icon-file-text2');
 	this.iconFileClass = 'span.icon-file-text2';
 	

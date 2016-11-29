@@ -14,18 +14,37 @@ var getNewDom = function(event) {
 	return new Dom(event);
 }
 
-var activeFolders = function (event) {
-	var dom = getNewDom(event);
-	dom.element.siblings().toggle();
+var completePrism = function (html) {
+	var env = {
+		code: html,
+		element: $('code').get()[0]
+	}
 
+	Prism.hooks.run('complete', env);
+};
+
+var activeFolders = function (event) {
+	event.preventDefault()
+	event.stopPropagation()
+	var dom = getNewDom(event);
+	dom.element.siblings().toggle()
+		
 	if(dom.element.hasClass('icon-folder-open')) {
 		dom.element
 			.removeClass('icon-folder-open')
-			.addClass('icon-folder');
+			.addClass('icon-folder')
+			.promise()
+			.done(function () {
+				localStorage.dom = $('.container').html()
+			});
 	} else {
 		dom.element
 			.removeClass('icon-folder')
-			.addClass('icon-folder-open');
+			.addClass('icon-folder-open')
+			.promise()
+			.done(function () {
+				localStorage.dom = $('.container').html()
+			});
 	}
 }
 
@@ -49,21 +68,16 @@ var	addCode = function(file) {
 	if(language === 'unknown'){
 		$('code')
 			.removeClass()
-			.html(codeText);
+			.html(codeText)
 
 		$('.footer-lang')
 			.text('unknown')
 			.promise()
 			.done(function () {
-				localStorage.dom = $('.container').html()
-			})
+				localStorage.dom = $('.container').html();
+			});
 
-		var env = {
-			code: codeText,
-			element: $('code').get()[0]
-		}
-
-		Prism.hooks.run('complete', env);
+		completePrism(codeText)
 
 	} else {
 
@@ -72,21 +86,16 @@ var	addCode = function(file) {
 		$('code')
 			.removeClass()
 			.addClass('language-'+ language)
-			.html(html);
+			.html(html)
 
 		$('.footer-lang')
 			.text(language)
 			.promise()
 			.done(function () {
-				localStorage.dom = $('.container').html()
-			})
+				localStorage.dom = $('.container').html();
+			});
 
-		var env = {
-			code: html,
-			element: $('code').get()[0]
-		}
-
-		Prism.hooks.run('complete', env);
+		completePrism(html)
 	}
 };
 
@@ -176,9 +185,10 @@ var openFile = function(event) {
 				var newDom = new Dom();
 				newDom.tab.on('click', changeTab);
 				newDom.iconCross.on('click', closeFile);
+				localStorage.dom = $('.container').html();
 			})
 	}
-}
+};
 
 var closeFile = function(event) {
 
@@ -192,7 +202,7 @@ var closeFile = function(event) {
 
 	// Eliminación de esos elementos
 	$(filter).each(function (index, element) {
-		$(element).remove()
+		$(element).remove();
 	});
 
 	/* Algoritmo que resuelve el estado de las pestañas
@@ -217,7 +227,7 @@ var closeFile = function(event) {
 	})
 	.promise()
 	.done(function () {
-		localStorage.dom = $('.container').html()
+		localStorage.dom = $('.container').html();
 	});
 }
 
@@ -227,7 +237,7 @@ module.exports = {
 	closeFile: closeFile,
 	activeFolders: activeFolders,
 	changeTab : changeTab
-}
+};
 
 
 

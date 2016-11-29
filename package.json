@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "jquery": "^3.0.0",
-    "page": "^1.7.1",
     "prismjs": "^1.5.1"
   }
 }
