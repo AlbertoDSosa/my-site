@@ -1,2 +1,40 @@
-### Un poco sobre mí
+### Un poco sobre mí y mi trabajo
+
+- Por la experiencia que he adquirido a lo largo de estos años
+en diferentes campos y empresas creo que puedo definirme a mi 
+mismo como "Profesional TIC". Voy a enumerar un poco mis 
+competencias y así dar una idea de mi perfil:
+
+* Instación y montaje tanto fija como para eventos de sistemas
+audiovisuales, electricidad, iluminación y sistemas infomáticos
+y de telecomunicaciones.
+
+* Programador en todo el entorno web (full-stack) en JavaScript.
+Con conocientos también en menor grado de los leguajes PHP y
+Python además de sus herramientas y frameworks más importantes.
+
+* Gestión y configuración básica de sistemas informáticos y
+redes en mayor grado de distribuciones GNU/linux con preferencia
+Ubuntu. Buen dominio también de los programas más populares tanto
+libres como privados de ofimática, edición de imágenes y fotografías,
+edición de audio, edición de video, presentaciones, etc...
+
+- Por lo que he descrito, en referencia a programación y sistemas
+puedo trabajar como backend pero creo que sería mucho más productivo
+como desarrollador frontend, me falta dominar y estoy en ello, aspectos
+avanzados en seguridad informática, redes y sistemas linux en general
+para llegar al techo de productividad que me gustaría.
+
+- En lo referente a audiovisuales me desenvuelvo bastante bién en
+cualquier tipo de montaje e instalación, llevo bien el sonido con 
+mesas de mezcla analógicas sobre todo ecualizando voces para 
+conferencias, presentaciones, mítines, shows con secuencias, etc.
+No tanto con mesas digitales no por no conocer su funcionamiento 
+si no por poca costumbre. En conciertos soy un buen técnico de escena.
+
+
+
+
+
+
 

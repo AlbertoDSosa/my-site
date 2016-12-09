@@ -14,9 +14,9 @@
 		</header>
 		<section class="body">
             Utiliza este sitio como si fuera un editor de código,
-            navega por los archivos de tu izquierda para encontrar
-            información sobre mí y lo que hago. Para una información
-            más extensa abre el archivo "readme.md"
+            navega por los archivos y carpetas de tu izquierda para
+            encontrar información sobre mí y lo que hago. Para una
+            información más extensa abre el archivo "readme.md"
 		</section>
 		<footer class="footer">
 			<div class="footer-info">Alberto D.Sosa - 2016</div>

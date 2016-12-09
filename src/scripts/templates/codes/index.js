@@ -9,6 +9,7 @@ var mainCSS = require('./main-css.txt');
 var mainJS = require('./main-js.txt');
 var mainSTYL = require('./main-styl.txt');
 var aboutMD = require('./about.txt');
+var historyMD = require('./history.txt');
 
 module.exports = {
 	index: index,
@@ -21,5 +22,6 @@ module.exports = {
 	mainCSS: mainCSS,
 	mainJS: mainJS,
 	mainSTYL: mainSTYL,
-	aboutMD: aboutMD
+	aboutMD: aboutMD,
+	historyMD: historyMD
 }

@@ -83,7 +83,7 @@ gulp.task('build:pug', ['build:scripts'], function () {
 
 gulp.task('watch', function () {
 	gulp.watch(config.styles.watch, ['build:css']);
-	gulp.watch(config.pug.watch, ['build:scripts']);
+	gulp.watch(config.pug.watch, ['build:scripts', 'build:pug']);
 	gulp.watch(config.scripts.watch, ['build:scripts']);
 	gulp.watch(config.codes, ['build:scripts']);
 });
