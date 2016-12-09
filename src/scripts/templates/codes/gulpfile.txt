@@ -1,5 +1,14 @@
 // Task Runner Gulp
 
+/*
+	Aunque he utilizado otros gestores de tareas en el pasado como "Grunt"
+	me pareze que "Gulp" se adapta más a mis preferencias sobre todo por
+	la limpieza del código final al utilizar funciones en vez de objetos
+	literales para su configuración, pero Grunt es una herramienta muy 
+	potente y no descarto ni mucho menos dejar de utilizarlo. También 
+	quiero empezar algún proyecto con "Webpack" que está muy interesante.
+*/
+
 var gulp = require('gulp')
 
 gulp.task('build:css', function () {
