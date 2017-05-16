@@ -19,7 +19,7 @@
             información más extensa abre el archivo "readme.md"
 		</section>
 		<footer class="footer">
-			<div class="footer-info">Alberto D.Sosa - 2016</div>
+			<div class="footer-info">Alberto D.Sosa - 2017</div>
 		</footer>
 	</div>
 	<script src="js/main.js"></script>

@@ -89,4 +89,4 @@ gulp.task('watch', function () {
 });
 
 gulp.task('build', [ 'build:pug', 'build:scripts', 'build:css', 'build:copy']);
-gulp.task('default', ['server', 'build', 'watch']);
+gulp.task('default', ['server', 'watch']);
