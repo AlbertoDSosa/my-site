@@ -4,23 +4,23 @@ $(function () {
 
 	var code = require('./templates/codes/');
 	var Prism = require('./prism');
-	var template = require('./templates/layout.jade');
+	var template = require('./templates/layout.pug');
 	var Dom = require('./dom');
 	var features = require('./features');
 
+	var moment = require('moment');
+
+	var date = moment().format('D/M/YYYY');
+
 	var defaultLocals = {
 		file: 'index.html',
-		lang: 'html'
+		lang: 'html',
+		date: date
 	};
 
-	if (localStorage.dom) {
+	console.log('test')
 
-		$('.container')
-			.html(localStorage.dom);
-
-	} else {
-
-		$('.container')
+	$('.container')
 			.html(template(defaultLocals))
 			.promise()
 			.done(function () {
@@ -29,7 +29,6 @@ $(function () {
 					.addClass('language-markup')
 					.html(html);
 			});
-	}
 
 	var dom = new Dom();
 
@@ -43,7 +42,7 @@ $(function () {
 	dom.openFiles.on('click', features.changeTab);
 	dom.iconCross.on('click', features.closeFile);
 
-})
+});
 
 
 

@@ -1,12 +1,12 @@
 var gulp = require('gulp'),
-		webServer = require('gulp-webserver'),
+		connect = require('gulp-connect'),
 		stylus = require('gulp-stylus'),
 		nib = require('nib'),
-		jadeify = require('jadeify'),
 		browserify =  require('browserify'),
 		pug = require('gulp-pug'),
 		stringify = require('stringify'),
-		source = require('vinyl-source-stream');
+		source = require('vinyl-source-stream'),
+		pugify = require('pugify');
 
 var config = {
 	styles: {
@@ -16,8 +16,8 @@ var config = {
 	},
 
 	pug: {
-		main: './src/index.jade',
-		watch: './src/**/*.jade',
+		main: './src/index.pug',
+		watch: './src/**/*.pug',
 		output: './build'
 	},
 
@@ -40,13 +40,10 @@ var config = {
 }
 
 gulp.task('server', ['build'], function () {
-	gulp.src('./build')
-	.pipe(webServer({
-		host: '0.0.0.0',
-		port: 8080,
-		livereload: true,
-    open: true
-	}));
+	connect.server({
+		root: './build',
+		livereload: true
+	});
 });
 
 gulp.task('build:copy', function () {
@@ -58,13 +55,15 @@ gulp.task('build:copy', function () {
 
 gulp.task('build:scripts', function() {
 	return browserify(config.scripts.main)
-	.transform(jadeify)
+	.transform(pugify)
 	.transform(stringify)
   .bundle()
   .on('error', function (err) { console.log(err); this.emit('end') })
   .pipe(source('main.js'))
   .pipe(gulp.dest(config.scripts.output))
+  .pipe(connect.reload())
 });
+
 
 gulp.task('build:css', ['build:copy'], function () {
 	gulp.src(config.styles.main)
@@ -72,13 +71,15 @@ gulp.task('build:css', ['build:copy'], function () {
 		use: nib(),
 		'include css': true
 	}))
-	.pipe(gulp.dest(config.styles.output));
+	.pipe(gulp.dest(config.styles.output))
+	.pipe(connect.reload());
 });
 
 gulp.task('build:pug', ['build:scripts'], function () {
 	gulp.src(config.pug.main)
 	.pipe(pug({pretty: true}))
-	.pipe(gulp.dest(config.pug.output));
+	.pipe(gulp.dest(config.pug.output))
+	.pipe(connect.reload());
 });
 
 gulp.task('watch', function () {

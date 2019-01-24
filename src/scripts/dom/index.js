@@ -32,6 +32,7 @@ function DomElements (event) {
 
 	this.$reclosables = this.iconCross.parent();
 	this.reclosables = this.$reclosables.toArray();
+
 }
 
 DomElements.prototype.getLanguage = function(fileExt) {

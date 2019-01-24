@@ -29,7 +29,7 @@ section.body
 		.body-sidebar--openFiles
 			h4 OPEN FILES
 			ul.sidebar-openFiles--list
-				include ./open-files.jade
+				include ./open-files.pug
 		.body-sidebar--folders
 			h4 FOLDERS
 			ul.sidebar-folders--list
@@ -92,10 +92,11 @@ section.body
 	article.body-content
 		nav.body-content--nav
 			ul.body-content--nav__list
-				include ./tabs.jade
+				include ./tabs.pug
 		.body-content--code
 			pre.line-numbers
 				code
 footer.footer
-	.footer-info Alberto D.Sosa - 2017
+	.footer-info Alberto D.Sosa - 
+		span #{date}
 		.footer-lang #{lang}

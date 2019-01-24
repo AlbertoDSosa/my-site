@@ -1,8 +1,8 @@
 
 var $ = require('jquery');
 var Dom = require('../dom');
-var openFilesTemplate = require('../templates/open-files.jade');
-var tabsTemplate = require('../templates/tabs.jade');
+var openFilesTemplate = require('../templates/open-files.pug');
+var tabsTemplate = require('../templates/tabs.pug');
 var codes = require('../templates/codes');
 var Prism = require('../prism');
 
@@ -33,18 +33,18 @@ var activeFolders = function (event) {
 		dom.element
 			.removeClass('icon-folder-open')
 			.addClass('icon-folder')
-			.promise()
+			/*.promise()
 			.done(function () {
 				localStorage.dom = $('.container').html()
-			});
+			});*/
 	} else {
 		dom.element
 			.removeClass('icon-folder')
 			.addClass('icon-folder-open')
-			.promise()
+			/*.promise()
 			.done(function () {
 				localStorage.dom = $('.container').html()
-			});
+			});*/
 	}
 }
 
@@ -72,10 +72,10 @@ var	addCode = function(file) {
 
 		$('.footer-lang')
 			.text('unknown')
-			.promise()
+			/*.promise()
 			.done(function () {
 				localStorage.dom = $('.container').html();
-			});
+			});*/
 
 		completePrism(codeText)
 
@@ -90,10 +90,10 @@ var	addCode = function(file) {
 
 		$('.footer-lang')
 			.text(language)
-			.promise()
+			/*.promise()
 			.done(function () {
 				localStorage.dom = $('.container').html();
-			});
+			});*/
 
 		completePrism(html)
 	}
@@ -185,7 +185,7 @@ var openFile = function(event) {
 				var newDom = new Dom();
 				newDom.tab.on('click', changeTab);
 				newDom.iconCross.on('click', closeFile);
-				localStorage.dom = $('.container').html();
+				//localStorage.dom = $('.container').html();
 			})
 	}
 };
@@ -225,10 +225,10 @@ var closeFile = function(event) {
 			}
 		}
 	})
-	.promise()
+	/*.promise()
 	.done(function () {
 		localStorage.dom = $('.container').html();
-	});
+	});*/
 }
 
 module.exports = {
