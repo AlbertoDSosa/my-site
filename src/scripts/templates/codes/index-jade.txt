@@ -2,10 +2,10 @@
   // Motor de templates Jade ahora (Pug)
 
 // Por la misma razón por la que me gusta Stylus ocurre lo mismo
-// con Pug, su sintáxis limpia. Aunque en la actualidad con ES2015
-// y "template strings" además de muchas librerías como "React" o
-// "yo-yo" que se están abriendo paso, Pug para mí sigue siendo una
-// buena alternativa a tener en cuenta para los templates.
+// con Pug, por su sintáxis limpia. Aunque en la actualidad con ES2015
+// y "template strings" además de muchas librerías como "React",
+// "Vuejs" o "yo-yo" Pug para mí sigue siendo una
+// buena alternativa a tener en cuenta para los templates y vistas.
 
 
 doctype html

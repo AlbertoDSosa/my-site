@@ -3,3 +3,10 @@
 .container {
 	background-color: white;
 }
+
+/*
+Se me da bien maquetar en css y me gusta mucho aunque a veces es un dolor de cabeza.
+Estos tiempos son buenos para css con nuevas especificaciones como Grid Layout que 
+facilita la vida muchísimo y la variedad de pre y post procesadores que hacen que 
+maquetar sea un trabajo de lo más entretenido.
+*/

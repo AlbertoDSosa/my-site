@@ -1,12 +1,12 @@
  
  /*
   Stylus sin duda es mi preprocesador de estilos CSS preferido sobre
-  todo por su sintaxis, pero reconozco que aunque no es un preprocesador
-  PostCSS creo va a terminar siendo mi herramienta para estilos CSS y
-  un duro competidor, ya veremos lo que pasa cuando trabaje más con el.
-  Esta página no es de diseño adaptable a todos los dispositivos por sus
-  caracteristicas particulares pero tengo un proyecto en gitLab llamado
-  TimeZones adaptado totalmente para cualquier tipo de dispositivo.
+  todo por su sintaxis limpia parecida a Pug. Pero no me importa 
+  trabajar con Less y Sass o PostCSS.
+
+  Esta página no es de diseño adaptable (responsive design) a todos los
+  dispositivos por sus caracteristicas particulares pero tengo un proyecto
+  en gitLab llamado TimeZones adaptado totalmente para cualquier tipo de dispositivo.
  */
  
 @import 'reset.css'

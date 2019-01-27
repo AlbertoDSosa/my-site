@@ -18,8 +18,6 @@ $(function () {
 		date: date
 	};
 
-	console.log('test')
-
 	$('.container')
 			.html(template(defaultLocals))
 			.promise()
@@ -43,6 +41,3 @@ $(function () {
 	dom.iconCross.on('click', features.closeFile);
 
 });
-
-
-

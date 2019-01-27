@@ -3,8 +3,8 @@
 /*
   Este lenguaje de programación es mi favorito y al que más tiempo he dedicado,
   actualmente lo utilizo en todo el stack desde el cliente hasta la base de datos
-  con tecnologías como Gulp, Pug, Angular, MongoDB, jQuery, Browserify, NodeJS, 
-  Express, Page y muchas librerias más.
+  con tecnologías como Gulp, Webpack, Pug, Angular, React, jQuery, NodeJS, Express, Page,
+  MongoDB y mucho más.
 */
 
 function hola(mensaje){

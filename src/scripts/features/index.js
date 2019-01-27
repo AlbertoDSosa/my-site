@@ -238,9 +238,3 @@ module.exports = {
 	activeFolders: activeFolders,
 	changeTab : changeTab
 };
-
-
-
-
-
-

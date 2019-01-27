@@ -14,5 +14,5 @@ carpeta "src".
 y la historia de mi andadura profesional.
 
 - También puedes echar un vistazo a mi perfil de github o gitlab
-(ariba a la derecha) donde tengo algunos proyectos personales y
+(arriba a la derecha) donde tengo algunos proyectos personales y
 test de tecnologías que me interesan.

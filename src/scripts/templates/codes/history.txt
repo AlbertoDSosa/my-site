@@ -1,25 +1,41 @@
 ### Mi Historia profesional
 
 - En 1998 estudio electricidad y electrónica, un ciclo medio llamado "Equipos electrónicos de consumo"
-donde también aprendendo informática básica, telefonía, imagen y sonido. Mientras, trabajo fines de semana
+donde también aprendiendo informática básica, telefonía, imagen y sonido. Mientras, trabajo fines de semana
 en la hostelería, las prácticas las hago en un taller de electrónica durante tres meses. Cuando termino en el
-verano de 2000 a pesar de que me gusta lo que he estudiado por circustancias sigo trabajando en la hostelería
+verano de 2000 a pesar de que me gusta lo que he estudiado por circunstancias sigo trabajando en la hostelería
 esta vez a jornada completa hasta el verano de 2004, luego decido estudiar en una academia privada diseño
-gráfico y web durante 6 meses, también hago un curso de inglés para gestión comercial este a principios de 2005
-durante 4 meses. Ante la poca oferta que me encuentro en Gran Canaria me desplazo a Barcelona a principios de
-2006 donde en poco tiempo ecuentro empleo de peón electricista primero en La FIRA (Feria de Exposiciones)
-y luego en mantenimiento de la rama hospitalaria y ambulatorios. Estoy un año hasta principios de 2007 donde
-empiezo a trabajar como técnico de audiovisuales sobre todo en instalaciones, a finales de 2008 aunque me
-gusta mi trabajo por motivos familiares y personales vuelvo a Gran Canaría, y en plena crisis la oferta está
-aún más reducida asi que vuelvo a trabajar en la hostelería de finales 2009 a principios de 2015. En este periodo
-y en mi tiempo libre, empezando a finales de 2013, comienzo a estudiar o mejor dicho retomar los estudios 
-orientados a la web pero esta vez en programación, ya que siempre me gustó y por una cosa u otra no me había
-puesto. Aún en la actualidad sigo tomando cursos y renovandome continuamente, además de ir emprendiendo algún
-que otro proyecto personal. A principios de 2015 vuelvo a trabajar en el sector audiovisual esta vez llevando
-el sonido de varios shows por hoteles hasta final de año que es cuando encuentro mi trabajo actual de técnico
-de audiovisuales pero esta vez orientado en eventos de todo tipo y no tanto en instalaciones.
+gráfico y web durante 6 meses, también hago un curso de inglés para la gestión comercial este a principios
+de 2005 durante 4 meses.
 
-- Mis pretensiones de futuro son aprender C++ como lenguaje de bajo nivel y certificarme en LPI (linux) en
-en todos sus niveles, me gustaría poder programar mis propios sistemas audiovisuales para instalaciones.
+-  A principios de 2006 decido emprender una aventura en Barcelona donde en poco tiempo encuentro empleo como
+mozo de almacén y peón electricista primero en La FIRA (Feria de Exposiciones), y luego en la misma empresa
+como auxiliar de mantenimiento de la rama hospitalaria y ambulatorios con especialidad electricidad.
+Estoy un año hasta principios de 2007 donde empiezo a trabajar como técnico de audiovisuales sobre todo
+en instalaciones, a mediados de 2008 aunque me gusta mi trabajo y me ofrecen promocionarme por motivos
+familiares y personales vuelvo a Gran Canaría.
 
+- En abril de 2009 comienzo a trabajar de nuevo en el sector hostelero en diferentes empresas hasta
+mediados de 2015. Hacia el final de este periodo y en mi tiempo libre, empezando a principios de 2014,
+comienzo a estudiar o mejor dicho retomar los estudios orientados a la web pero esta vez en programación,
+ya que siempre me gustó y por una cosa u otra no me había puesto. Aún en la actualidad sigo tomando cursos y
+renovandome continuamente, además de ir emprendiendo algún que otro proyecto personal.
+
+- A mediados de 2015 vuelvo a trabajar en el sector audiovisual esta vez llevando el varios shows
+(luces, sonido y backing tracks) por hoteles hasta finales de año. También toco la batería y la percusión
+para algunos shows.
+
+- En diciembre de 2015 comienzo a trabajar como mozo de almacén y técnico de montajes en eventos de todo tipo,
+sobre todo en apoyo audiovisual(luces, sonido, vídeo, traducción simultanea, etc...). Con el tiempo me hago
+responsable de la electricidad por mi pasado como electricista.
+
+- En el verano de 2017 entro a trabajar como desarrollador web junior pero al mes me quedo sin transporte
+ y me resulta muy complicado moverme hasta el puesto de trabajo, así que a mi pesar tengo que dimitir.
+
+- Ya a mediados de 2018 después de meses de preparación monto dos proyectos para tocar la batería por hoteles,
+bares, restaurantes y celebraciones. Hago la temporada de verano hasta finales de año.
+
+- Todo esto nos lleva a la actualidad donde estoy emprendiendo una nueva aventura esta vez en Madrid.
+Mi fin primordial es volver a trabajar en el sector del desarrollo web, esta vez centrándome más en el
+frontend, UX-UI y también empezar o medio retomar el mundo del marketing.
 
